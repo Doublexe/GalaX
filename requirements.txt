@@ -1,2 +1,2 @@
-Python==3.6
-Django==1.11.20
+Python==3.6(64bits)
+Django==1.11.20(TLS)
