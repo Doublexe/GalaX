@@ -15,9 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-
+from login import views
+'''Cause these four functions are mainly part so in whole urls,if not right,change it.'''
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^map/', include('map.urls')),
-    url(r'^user_information/', include('user_information.urls'))
+    url(r'^user_information/', include('user_information.urls')),
+
+
+    url(r'^index/', views.index),
+    url(r'^login/', views.login),
+    url(r'^register/', views.register),
+    url(r'^logout/', views.logout),
 ]
