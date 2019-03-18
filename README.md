@@ -8,7 +8,11 @@ Hope to meet someone interested in it!
 
 
 # 环境配置
+#### 依赖配置
+Python==3.6(64bits)
+Django==1.11.20(TLS)
 
+#### MySQL配置
 安装好mysql后，先安装包
 > pip install pymysql
 
