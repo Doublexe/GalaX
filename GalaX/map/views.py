@@ -4,4 +4,4 @@ from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
-    return HttpResponse("<h>Hello World<h>")
+    return render(request, 'map/map_base.html')

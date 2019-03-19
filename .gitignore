@@ -1,5 +1,6 @@
 .idea/
-
+.test/
 settings.py
+__pycache__/
 db.sqlite3
 mysite/__pycache__/
