@@ -1,0 +1,2 @@
+
+<body style="background-image: url({% static 'image/galax6.jpg' %});background-size:100%;">
