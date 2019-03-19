@@ -1,0 +1,20 @@
+{% extends 'base.html' %} <!--baseline for map app-->
+
+{% block title %}
+    地图
+{% endblock %}
+
+{% block css %}
+    {% include 'map/components/baidu_map_head.html' %}
+{% endblock %}
+
+{% block content %}
+<body>
+
+    {% include 'map/components/baidu_map.html' %}
+
+</body>
+{% endblock %}
+
+
+
