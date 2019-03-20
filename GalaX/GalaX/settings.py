@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'map',
     'user_information.apps.UserInformationConfig',
     'login',
+    'captcha',
 ]
 
 MIDDLEWARE = [
