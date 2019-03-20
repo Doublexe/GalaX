@@ -1,0 +1,40 @@
+{% extends 'plain_base.html' %} <!--baseline for map app-->
+
+{% block title %}
+    地图
+{% endblock %}
+
+{% block css %}
+    <!--TODO: config-->
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+<!--styles-->
+<style type="text/css">
+    #container{height:500px}
+</style>
+
+<!--baidu map api, use ak-->
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=quBLBeyxjGgvQl5f2rG89dzlfgUijdq9">
+</script>
+
+{% endblock %}
+
+{% block content %}
+<body>
+
+    <!--map itself-->
+<div id="container"></div>
+
+<!--map generation-->
+<script type="text/javascript">
+    var map = new BMap.Map("container");
+    var point = new BMap.Point(116.404, 39.915);
+    map.centerAndZoom(point, 15);
+    window.setTimeout(function(){
+    map.panTo(new BMap.Point(116.409, 39.918));
+            }, 2000);
+</script>
+
+<!--map events-->
+</body>
+{% endblock %}
