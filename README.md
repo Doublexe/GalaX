@@ -23,3 +23,4 @@ Django==1.11.20(TLS)
 
 # 更改
 3.17 规定了导航栏模板，在根目录templates中;增加了登陆页面链接，在login中;加入了jquery-3.3.1和bootstrap-3.3.7-dist的支持，在static中。以上需要的话自取即可。
+3.20 占用了id:container
