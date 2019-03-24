@@ -141,3 +141,43 @@ STATICFILES_DIRS = [
     
 ]
 
+# Email setting
+"""
+IMAP 服务器名称outlook.office365.com
+
+IMAP 端口 993
+
+IMAP 加密方法TLS
+
+POP 服务器名称outlook.office365.com
+
+POP 端口 995
+
+POP 加密方法 TLS
+
+SMTP 服务器名称smtp.office365.com
+
+SMTP 端口 587
+
+SMTP 加密方法 STARTTLS
+"""
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Email host，we use outlook in QQ group bulletin
+EMAIL_HOST = 'smtp-mail.outlook.com'
+#EMAIL_HOST = 'smtp.office365.com'
+#EMAIL_HOST = 'smtp.live.com'
+
+#(port 25 or 587)
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'galax_developer@outlook.com'
+# 自己的邮箱授权码，非密码
+EMAIL_HOST_PASSWORD = 'mlgxkbopsyvffyri'
+EMAIL_USE_TLS = True
+
+#Other email setting may use
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+#Subject-line prefix for email messages sent with django.core.mail.mail_admins or django.core.mail.mail_managers. You’ll probably want to include the trailing space
+#EMAIL_SUBJECT_PREFIX=
+#Longest time avaliable for register
+CONFIRM_DAYS = 2
