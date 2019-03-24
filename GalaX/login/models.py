@@ -13,7 +13,7 @@ class User(models.Model):
     name = models.CharField(max_length=128, unique=True)
     password = models.CharField(max_length=256)
     email = models.EmailField(unique=True)
-    phonenumber=models.CharField(unique=True,max_length=15)
+    phone_number=models.CharField(unique=True,max_length=15)
     sex = models.CharField(max_length=32, choices=gender, default="男")
     c_time = models.DateTimeField(auto_now_add=True)
 
