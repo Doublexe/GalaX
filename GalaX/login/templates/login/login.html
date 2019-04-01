@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+
 {% block title %}登录{% endblock %}
 {% block css %}
+<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
 <link href="{% static 'css/login.css' %}" rel="stylesheet" />{% endblock %}
 
 
@@ -39,10 +41,18 @@
                     {{ login_form.captcha.label_tag }}
                     {{ login_form.captcha }}
                 </div>
-                
+
                 <button type="reset" class="btn btn-default pull-left">重置</button>
                 <button type="submit" class="btn btn-primary pull-right">提交</button>
             </form>
         </div>
     </div> <!-- /container -->
+    <script>
+    $('.captcha').click(function () {
+        $.getJSON("/captcha/refresh/", function (result) {
+            $('.captcha').attr('src', result['image_url']);
+            $('#id_captcha_0').val(result['key'])
+        });
+    });
+    </script>
     {% endblock %}
