@@ -77,7 +77,7 @@ def login(request):
 
 def register(request):
     if request.session.get('is_login', None):
-        # 登录状态不允许注册。你可以修改这条原则！
+        # 登录状态不允许注册！
         return redirect("/index/")
     if request.method == "POST":
         register_form = forms.RegisterForm(request.POST)
@@ -132,6 +132,33 @@ def logout(request):
     # del request.session['user_id']
     # del request.session['user_name']
     return redirect("/index/")
+
+def passchg(request):
+    if request.session.get('is_login', None):
+        # 登录状态不允许修改密码！
+        return redirect("/index/")
+    if request.method == "POST":
+        passchg_form = forms.UserForm(request.POST)
+        message = "请检查填写的内容！"
+        if passchg_form.is_valid():
+            password_prime = passchg_form.cleaned_data['password0']
+            password1 = passchg_form.cleaned_data['password1']
+            password2 = passchg_form.cleaned_data['password2']
+            username_session=request.session['user_name']
+            user = models.User.objects.get(name=username_session)
+            if user.password == hash_code(password_prime):  # 原密码哈希值和数据库内的值进行比对
+                if password1 != password2:  # 判断两次密码是否相同
+                    message = "两次输入的密码不同！"
+                    return render(request, 'login/passchg.html', locals())
+                else:
+                    user.password=hash_code(password1)
+                    user.save()
+                    message = "密码修改成功！"
+                    return render(request, 'login/passchg.html', locals())
+            else:
+                message = "原密码不正确！"
+                return render(request, 'login/passchg.html', locals())
+    return render(request, 'login/register.html', locals())
 
 def user_confirm(request):
     code = request.GET.get('code', None)
