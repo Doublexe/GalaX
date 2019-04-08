@@ -1,12 +1,16 @@
+{% load staticfiles %}
+
 <!--适应移动端页面展示-->
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<!--styles-->
-<style type="text/css">
-    #container{height: 500px}
-</style>
 
 <!--baidu map api, use ak-->
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=quBLBeyxjGgvQl5f2rG89dzlfgUijdq9">
 </script>
+
+<!--map generation-->
+<script src="{% static 'map/js/generation.js' %}" type="module"></script>
+
+<!--map event marking-->
+<script src="{% static 'map/js/marker.js' %}" type="module"></script>

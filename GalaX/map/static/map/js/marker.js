@@ -17,6 +17,5 @@ function addMarker(point, index){  // 创建图标对象
     map.addOverlay(marker);
 }
 
-// 随机向地图添加10个标注
 var point = new BMap.Point(116.404, 39.915); // 创建点坐标
 addMarker(point, 0);

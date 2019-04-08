@@ -1,19 +1,22 @@
-<div id="map_block_card">
-    <div id="map_block_card_body">
-        {% include 'map/baidu_map/baidu_map.html' %}
-    </div>
+<div id="map_block" class="my_card" style="height: 100%">
+  
+  <!-- nav bar -->
+  <nav id="map_nav_bar" style="height: 34px; position: relative;">
+      <form class="form-inline" style="position: absolute; top: 0%; left: 5%;">
+        <input style="height: 34px" class="form-control mr-sm-2" type="search" placeholder="寻找" aria-label="寻找">
+        <button style="height: 34px" class="btn btn-outline-success my-2 my-sm-0" type="submit">查找</button>
+      </form>
+      <label class="switch" style="height: 100%; position: absolute; top: 0%; left: 90%;">
+        <input type="checkbox" id="map_block_dynamic">
+        <span class="slider round"></span>
+      </label>
+  </nav>
+  
+  <!-- map -->
+  <div id="map_canvas"  style="height: calc(100% - 34px); position: relative;">
+      {% include 'map/baidu_map/baidu_map.html' %}
+  </div>
 </div>
 
-<style type="text/css">
-/* Add shadows to create the "card" effect */
-#map_block_card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-}
 
-/* On mouse-over, add a deeper shadow */
-#map_block_card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
 
-</style>

@@ -1,9 +1,11 @@
 <!--
-        all_blocks = left_blocks[upper: map, lower: recommendation]
-                    &right_blocks[info]
--->
+    all_blocks = left_blocks[upper: map, lower: recommendation]
+                &right_blocks[info]
+    -->
 
 {% extends 'base.html' %} <!--baseline for map app-->
+
+{% load staticfiles %}
 
 {% block title %}
     地图
@@ -11,36 +13,40 @@
 
 {% block css %}
     {% include 'map/components/map_block_head.html' %}
+
+    <!-- general css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_card.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_fade.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_shape.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_switch.css' %}">
+    <style>
+        body, html {height: 100%;}
+    </style>
 {% endblock %}
 
 {% block content %}
 <body>
 
-    <div class="row" id="all_blocks">
-        <div class="col-md-9" id="left_blocks">
+    <div class="row" id="all_blocks" style="height:100%">
+        <div class="col-md-9 my_fade" id="left_blocks" style="height:100%">
 
-            <div id="map_block">
+            <div id="map_block" class="my_fade" style="height: 80%">
                 {% include 'map/components/map_block.html' %}
             </div>
 
-            <div id="recom_block">
-                <h1>Recommendations</h1>
+            <div id="recom_block" class="my_fade" style="height:20%">
+                {% include 'map/components/recom_block.html' %}
             </div>
 
         </div>
 
-        <div class="col-md-3" id="right_blocks">
-            <div id="info_block">
-                <h1>Information</h1>
+        <div class="col-md-3 my_fade" id="right_blocks" style="height:100%">
+            <div id="info_block" class="my_fade" style="height:100%">
+                {% include 'map/components/info_block.html' %}
             </div>
 
         </div>
     </div>
-
-    <!--styles-->
-    <style type="text/css">
-        #map_block{padding: 10px}
-    </style>
 
 </body>
 {% endblock %}
