@@ -4,3 +4,10 @@
     -o-transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
     transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 }
+
+.map_block_dynamic_fade {
+    -webkit-transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    -moz-transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    -o-transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
