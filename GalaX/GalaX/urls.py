@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from login import views
-'''Cause these four functions are mainly part so in whole urls,if not right,change it.'''
+'''Cause these six functions are mainly part so in whole urls,if not right,change it.'''
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^map/', include('map.urls')),

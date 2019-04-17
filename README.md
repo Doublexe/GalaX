@@ -32,13 +32,46 @@ Django==1.11.20(TLS)
 
 
 3.24
+
 1. 添加了session用于标志用户登陆状态。
 2. 注册模块，密码用sha256加密。
 3. 添加了用户注册，邮件确认模块，但 未完成定时删除未在有效期内进行邮件确认的用户。还有非常多BUG。
 
 4.1
-1.使用ajax进行了验证码刷新。
-2.修改了登陆注册界面的样式，使其更好看。包括验证码样式，表格样式等。
+
+1. 使用ajax进行了验证码刷新。
+2. 修改了登陆注册界面的样式，使其更好看。包括验证码样式，表格样式等。
 
 4.2
+
 1.修改密码功能（未完成）
+
+4.17
+
+**1. 重要：为了安全性，开启了导航栏模板base.html的自动转义功能**.
+```
+Django的自动HTML转义功能。默认情况下，Django中的每个模板会自动转义每个变量。也就是说，下面五个字符将被转义：
+<会转换为&lt;
+>会转换为&gt;
+'（单引号）转换为&#39;
+"(双引号)会转换为&quot;
+&会转换为&amp;
+```
+关闭办法：
+```
+    {% autoescape off %}
+        Auto-escaping applies again: {{ name }}
+    {% endautoescape %}
+```
+或者
+```
+使用safe过滤器来关闭变量上的自动转义：
+
+This will be escaped: {{ data }}
+This will not be escaped: {{ data|safe }}
+
+safe是safe from further escaping或者can be safely interpreted as HTML的缩写。请确保你知道自己在用safe过滤器干什么！在上面的例子中，如果data含有<b>，输出会是：
+
+This will be escaped: &lt;b&gt;
+This will not be escaped: <b>
+```

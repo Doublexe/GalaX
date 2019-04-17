@@ -1,3 +1,5 @@
+<!-- 开启了自动转义 -->
+{% autoescape on %}
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -35,7 +37,7 @@
       <a class="navbar-brand" href="#">Brand</a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
-    
+
     <!-- 主页 button -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
@@ -44,7 +46,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
             aria-expanded="false">Dropdown <span class="caret"></span></a>
-            <!-- dropdown-menu(not use) -->
+          <!-- dropdown-menu(not use) -->
           <ul class="dropdown-menu">
             <li><a href="#">Action</a></li>
             <li><a href="#">Another action</a></li>
@@ -65,14 +67,14 @@
       </form>
       <!-- log in or loging -->
       <ul class="nav navbar-nav navbar-right">
-          {% if request.session.is_login %}
-          <li><a href="#">欢迎您：{{ request.session.user_name }}</a></li>
-          <li><a href="/passchg/">修改密码</a></li>
-          <li><a href="/logout/">登出</a></li>
-      {% else %}
-          <li><a href="/login/">登录</a></li>
-          <li><a href="/register/">注册</a></li>
-      {% endif %}
+        {% if request.session.is_login %}
+        <li><a href="#">欢迎您：{{ request.session.user_name }}</a></li>
+        <li><a href="/passchg/">修改密码</a></li>
+        <li><a href="/logout/">登出</a></li>
+        {% else %}
+        <li><a href="/login/">登录</a></li>
+        <li><a href="/register/">注册</a></li>
+        {% endif %}
         <!-- information -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -98,3 +100,4 @@
 </body>
 
 </html>
+{% endautoescape %}
