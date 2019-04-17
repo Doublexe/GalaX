@@ -42,3 +42,8 @@ Django==1.11.20(TLS)
 
 4.2
 1.修改密码功能（未完成）
+
+4.17
+1.事件（Event）model创建完成，相应url访问api初步形成
+2.使用Pillow=5.4.1
+3.事件在Map中的information显示完成
