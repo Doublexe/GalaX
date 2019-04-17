@@ -13,6 +13,7 @@
 
 {% block css %}
     {% include 'map/components/map_block_head.html' %}
+    {% include 'map/components/info_block_head.html' %}
 
     <!-- general css -->
     <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_card.css' %}">
@@ -22,6 +23,14 @@
     <style>
         body, html {height: 100%;}
     </style>
+
+    <!-- map_base.css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'map/css/map_base.css' %}">
+
+    <!-- JS -->
+    <!-- map block dynamic -->
+    <script src="{% static 'map/js/map_block_dynamic.js' %}" type="module"></script>
+    <script src="{% static 'map/js/on_refresh.js' %}" type="module"></script>
 {% endblock %}
 
 {% block content %}
@@ -40,7 +49,7 @@
 
         </div>
 
-        <div class="col-md-3 my_fade" id="right_blocks" style="height:100%">
+        <div class="col-md-3 map_block_dynamic_fade" id="right_blocks" style="height:100%">
             <div id="info_block" class="my_fade" style="height:100%">
                 {% include 'map/components/info_block.html' %}
             </div>
