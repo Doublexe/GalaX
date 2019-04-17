@@ -47,6 +47,7 @@ Django==1.11.20(TLS)
 1.修改密码功能（未完成）
 
 4.17
+<<<<<<< HEAD
 
 **1. 重要：为了安全性，开启了导航栏模板base.html的自动转义功能**.
 ```
@@ -75,3 +76,9 @@ safe是safe from further escaping或者can be safely interpreted as HTML的缩�
 This will be escaped: &lt;b&gt;
 This will not be escaped: <b>
 ```
+4.17
+
+1.事件（Event）model创建完成，相应url访问api初步形成
+2.使用Pillow=5.4.1
+3.事件在Map中的information显示完成
+

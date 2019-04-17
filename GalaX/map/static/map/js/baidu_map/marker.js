@@ -17,5 +17,5 @@ function addMarker(point, index){  // 创建图标对象
     map.addOverlay(marker);
 }
 
-var point = new BMap.Point(116.404, 39.915); // 创建点坐标
+var point = new BMap.Point(104.0668,30.5728); // 创建点坐标
 addMarker(point, 0);
