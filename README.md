@@ -82,3 +82,6 @@ This will not be escaped: <b>
 2.使用Pillow=5.4.1
 3.事件在Map中的information显示完成
 
+
+4.20
+1.登陆改密码完成。

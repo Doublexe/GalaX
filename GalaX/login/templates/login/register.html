@@ -41,6 +41,11 @@
                     <label for="{{ register_form.password2.id_for_label }}" style="color:floralwhite">再次输入：</label>
                   {{ register_form.password2 }}
               </div>
+              <div>
+                <em>密码强度：</em>
+                <em id="strength"></em>
+                <div id="strengthLevel" class="strengthLv0"></div>
+              </div>
               <div class="form-group">
                     {{ register_form.email.errors }}
                     <label for="{{ register_form.email.id_for_label }}" style="color:floralwhite">邮箱：</label>
