@@ -1,89 +1,133 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}注册{% endblock %}
-{% block content %}
+{% block css %}
+<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
+<link href="{% static 'css/login.css' %}" rel="stylesheet" />
+<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
+<link rel="stylesheet" href="https://unpkg.com/mobi.css/dist/mobi.min.css">
+
+<link href="{% static 'login/css/PwdStrength.css' %}" rel="stylesheet" />
+
 <style>
     .errorlist {
         color: red;
     }
 </style>
-<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
-<link rel="stylesheet" href="https://unpkg.com/mobi.css/dist/mobi.min.css">
+
+{% endblock %}
+{% block content %}
+
+
 <body style="background-image: url({% static 'image/galax6.jpg' %});background-size:100%;">
     <div class="flex-center">
         <div class="container">
             <div class="flex-center">
                 <div class="unit-1-2 unit-1-on-mobile">
-          <form class='form-register' action="/register/" method="post">
+                    <form class='form-register' action="/register/" method="post">
 
-              {% if message %}
-                  <div class="alert alert-warning">{{ message }}</div>
-              {% endif %}
+                        {% if message %}
+                        <div class="alert alert-warning">{{ message }}</div>
+                        {% endif %}
 
-              {% csrf_token %}
+                        {% csrf_token %}
 
-              <h2 class="text-center" style="color:floralwhite">欢迎注册</h2>
-              <div class="form-group">
-                    {{ register_form.username.errors }}
-                    <label for="{{ register_form.username.id_for_label }}" style="color:floralwhite">用户名:</label>
-                  {{ register_form.username}}
-                  {% if register_form.username.help_text %}
-                  <p class="help text-small text-muted">{{ register_form.username.help_text|safe }}</p>
-                  {% endif %}
-              </div>
-              <div class="form-group">
-                    {{ register_form.password1.errors }}
-                    <label for="{{ register_form.password1.id_for_label }}" style="color:floralwhite">密码：</label>
-                  {{ register_form.password1 }}
-              </div>
-              <div class="form-group">
-                    {{ register_form.password2.errors }}
-                    <label for="{{ register_form.password2.id_for_label }}" style="color:floralwhite">再次输入：</label>
-                  {{ register_form.password2 }}
-              </div>
-              <div>
-                <em>密码强度：</em>
-                <em id="strength"></em>
-                <div id="strengthLevel" class="strengthLv0"></div>
-              </div>
-              <div class="form-group">
-                    {{ register_form.email.errors }}
-                    <label for="{{ register_form.email.id_for_label }}" style="color:floralwhite">邮箱：</label>
-                  {{ register_form.email }}
-              </div>
-              <div class="form-group">
-                    {{ register_form.phone_number.errors }}
-                    <label for="{{ register_form.phone_number.id_for_label }}" style="color:floralwhite">电话号码：</label>
-                    {{ register_form.phone_number }}
+                        <h2 class="text-center" style="color:floralwhite">欢迎注册</h2>
+                        <div class="form-group">
+                            {{ register_form.username.errors }}
+                            <label for="{{ register_form.username.id_for_label }}"
+                                style="color:floralwhite">用户名:</label>
+                            {{ register_form.username}}
+                            {% if register_form.username.help_text %}
+                            <p class="help text-small text-muted">{{ register_form.username.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ register_form.password1.errors }}
+                            <label for="{{ register_form.password1.id_for_label }}"
+                                style="color:floralwhite">密码：</label>
+                            {{ register_form.password1 }}
+                        </div>
+                        <div class="form-group">
+                            {{ register_form.password2.errors }}
+                            <label for="{{ register_form.password2.id_for_label }}"
+                                style="color:floralwhite">再次输入：</label>
+                            {{ register_form.password2 }}
+                        </div>
+
+                        <div id="PwdDv" class="form-group">
+                            <label style="color:floralwhite">密码强度：</label>
+                            <em id="strength"></em>
+                            <div id="strengthLevel" class="strengthLv0"></div>
+                        </div>
+                        <!--
+
+                        <script type="text/javascript" src="{% static 'login/js/PwdStrength.js' %}">
+                            document.querySelector('#{{register_form.password1.auto_id}}').onkeyup = function () {
+                            document.querySelector('#strengthLevel').className = "strengthLv" + (this.value.length <6 ? 0:getLvl(this.value));
+                        </script>
+-->
+
+                        <script type="text/javascript">
+                            function getLvl(txt) {
+                                //默认级别是0
+                                var lvl = 0;
+                                //判断这个字符串中有没有数字
+                                if (/[0-9]/.test(txt)) {
+                                    lvl++;
+                                }
+                                //判断字符串中有没有字母
+                                if (/[a-zA-Z]/.test(txt)) {
+                                    lvl++;
+                                }
+                                //判断字符串中有没有特殊符号
+                                if (/[^0-9a-zA-Z_]/.test(txt)) {
+                                    lvl++;
+                                }
+                                return lvl;
+                            }
+                            document.getElementById('{{register_form.password1.auto_id}}').onkeyup = function () {
+                                document.querySelector('#strengthLevel').className = "strengthLv" + (this.value
+                                    .length < 6 ? 0 : getLvl(this.value));
+                            };
+                        </script>
+                        <!--
+
+                        <script type="text/javascript" src="{% static 'login/js/PwdStrength.js'  %}">
+                            attachEvents('{{register_form.password1.auto_id}}');
+                        </script>
+                        -->
+                        <div class="form-group">
+                            {{ register_form.email.errors }}
+                            <label for="{{ register_form.email.id_for_label }}" style="color:floralwhite">邮箱：</label>
+                            {{ register_form.email }}
+                        </div>
+                        <div class="form-group">
+                            {{ register_form.phone_number.errors }}
+                            <label for="{{ register_form.phone_number.id_for_label }}"
+                                style="color:floralwhite">电话号码：</label>
+                            {{ register_form.phone_number }}
+                        </div>
+                        <div class="form-group">
+                            {{ register_form.sex.errors }}
+                            <label for="{{ register_form.sex.id_for_label }}" style="color:floralwhite">性别：</label>
+                            {{ register_form.sex }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ register_form.captcha.errors }}
+                            <label for="{{ register_form.captcha.id_for_label }}" style="color:floralwhite">验证码：</label>
+                            {{ register_form.captcha }}
+                        </div>
+
+                        <button type="reset" class="btn btn-default pull-left">重置</button>
+                        <button type="submit" class="btn btn-primary pull-right">提交</button>
+
+                    </form>
+
                 </div>
-              <div class="form-group">
-                    {{ register_form.sex.errors }}
-                    <label for="{{ register_form.sex.id_for_label }}" style="color:floralwhite">性别：</label>
-                  {{ register_form.sex }}
-              </div>
-              
-              <div class="form-group">
-                  {{ register_form.captcha.errors }}
-                  <label for="{{ register_form.captcha.id_for_label }}" style="color:floralwhite">验证码：</label>
-                  {{ register_form.captcha }}
-              </div>
-
-              <button type="reset" class="btn btn-default pull-left">重置</button>
-              <button type="submit" class="btn btn-primary pull-right">提交</button>
-
-          </form>
-
+            </div>
         </div>
-    </div>
-</div>
-</div> <!-- /container -->
-
-    <script>
-    $('.captcha').click(function () {
-        $.getJSON("/captcha/refresh/", function (result) {
-            $('.captcha').attr('src', result['image_url']);
-            $('#id_captcha_0').val(result['key'])
-        });
-    });
-    </script>
-{% endblock %}
+    </div> <!-- /container -->
+    <script type="text/javascript" src="{% static 'login/js/CapchaFresh.js' %}"></script>
+    {% endblock %}

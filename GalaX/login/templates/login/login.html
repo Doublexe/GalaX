@@ -4,7 +4,9 @@
 {% block title %}登录{% endblock %}
 {% block css %}
 <script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
-<link href="{% static 'css/login.css' %}" rel="stylesheet" />{% endblock %}
+<link href="{% static 'css/login.css' %}" rel="stylesheet" />
+
+{% endblock %}
 
 
 {% block content %}
@@ -18,43 +20,26 @@
                 {% endif %}
                 {% csrf_token %}
                 <h2 class="text-center" style="color:floralwhite">欢迎登录</h2>
-                <!-- 
-              <div class="form-group">
-                <label for="id_username" style="color:floralwhite">用户名：</label>
-                <input type="text" name='username' class="form-control" id="id_username" placeholder="Username" autofocus required>
-              </div>
-              <div class="form-group">
-                <label for="id_password" style="color:floralwhite">密码：</label>
-                <input type="password" name='password' class="form-control" id="id_password" placeholder="Password" required>
-              </div>
-               -->
                 <div class="form-group">
                     {{ login_form.username.errors }}
                     <label for="{{ login_form.username.id_for_label }}" style="color:floralwhite">用户名:</label>
                     {{ login_form.username}}
                 </div>
                 <div class="form-group">
-                        {{ login_form.password.errors }}
-                        <label for="{{ login_form.password.id_for_label }}" style="color:floralwhite">密码:</label>
+                    {{ login_form.password.errors }}
+                    <label for="{{ login_form.password.id_for_label }}" style="color:floralwhite">密码:</label>
                     {{ login_form.password }}
                 </div>
                 <div class="form-group">
                     {{ login_form.captcha.errors }}
                     <label for="{{ login_form.captcha.id_for_label }}" style="color:floralwhite">验证码:</label>
                     {{ login_form.captcha }}
-                   </div>
+                </div>
 
                 <button type="reset" class="btn btn-default pull-left">重置</button>
                 <button type="submit" class="btn btn-primary pull-right">提交</button>
             </form>
         </div>
     </div> <!-- /container -->
-    <script>
-    $('.captcha').click(function () {
-        $.getJSON("/captcha/refresh/", function (result) {
-            $('.captcha').attr('src', result['image_url']);
-            $('#id_captcha_0').val(result['key'])
-        });
-    });
-    </script>
+    <script type="text/javascript" src="{% static 'login/js/CapchaFresh.js' %}"></script>
     {% endblock %}
