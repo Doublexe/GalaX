@@ -2,14 +2,24 @@
   
   <!-- nav bar -->
   <nav id="map_nav_bar" style="height: 34px; position: relative;">
-      <form class="form-inline" style="position: absolute; top: 0%; left: 5%;">
-        <input style="height: 34px" class="form-control mr-sm-2" type="search" placeholder="寻找" aria-label="寻找">
-        <button style="height: 34px" class="btn btn-outline-success my-2 my-sm-0" type="submit">查找</button>
-      </form>
-      <label class="switch" style="height: 100%; position: absolute; top: 0%; left: 90%;">
-        <input type="checkbox" id="map_block_dynamic">
-        <span class="slider round"></span>
-      </label>
+    
+    <!-- search input -->
+    <form id="map_search_form" class="form-inline" style="position: absolute; top: 0%; left: 5%;">
+      <input id="map_search_input" style="height: 34px" class="form-control mr-sm-2" type="search" placeholder="寻找" aria-label="寻找">
+      <button id="map_search_btn" style="height: 34px" class="btn btn-outline-success my-2 my-sm-0" type="submit">查找</button>
+    </form>
+    
+    <!-- add event -->
+    <button id="map_add_event" style="height:30px; width:30px; position: absolute; top: 2px; left: 80%;" class="button button-circle button-tiny"><i class="fa fa-plus"></i></button>
+    
+    <!-- relocate -->
+    <button id="map_relocate" style="height:30px; width:30px; position: absolute; top: 2px; left: 75%;" class="button button-circle button-tiny"><i class="fa fa-refresh"></i></button>
+
+    <!-- map dynamic -->
+    <label class="switch" style="height: 100%; position: absolute; top: 0%; left: 90%;">
+      <input type="checkbox" id="map_block_dynamic">
+      <span class="slider round"></span>
+    </label>
   </nav>
   
   <!-- map -->

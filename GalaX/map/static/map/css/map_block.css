@@ -2,3 +2,7 @@
     border-color: #e7e7e7;
     background-color:  rgb(238, 235, 235);
 }
+
+#map_add_event, #map_relocate {
+    background-color: #ccc;
+}

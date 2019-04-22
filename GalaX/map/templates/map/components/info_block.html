@@ -1,11 +1,53 @@
-<div class="my_card map_block_dynamic" style="height: 100%; padding: 5%">
-    <canvas id="info_image" class="map_block_dynamic" style="height: 30%;">
-        Image
-    </canvas>
-    <div id="info_summary" class="map_block_dynamic" style="height: 20%; padding: 5%">
-        Summary
+<div id="event_info" class="my_card map_block_dynamic" style="height: 100%; transition: box-shadow 0.5s ease-in-out;">
+    <div style="height: calc(100% - 34px); padding: 5%;">
+        <canvas id="info_image" class="canvas_btn map_block_dynamic" style="height: 30%; width: 100%">
+            <!-- Image -->
+        </canvas>
+        <div id="info_summary" class="map_block_dynamic" style="height: 20%; padding: 5%">
+            <!-- Summary -->
+        </div>
+        <div id="info_content" class="map_block_dynamic" style="height: 50%; padding: 5%; overflow-y: scroll;">
+            <!-- Content -->
+        
+        </div>
     </div>
-    <div id="info_content" class="map_block_dynamic" style="height: 50%; padding: 5%; overflow-y: scroll;">
-        Content
+
+    <!-- nav bar -->
+    <nav id="info_nav_bar" style="height: 34px; position: relative; bottom: 0px;"></nav>
+</div>
+
+<div id="add_event_info" class="my_card map_block_dynamic" style="visibility: hidden; position: absolute; top: 0%; z-index: 1; height: 100%; width:100%; transition: box-shadow 0.5s ease-in-out;">
+    <div style="height: calc(100% - 34px); padding: 5%;">
+        <div id="add_event_image" class="map_block_dynamic" style="height: 25%; width: 100%; margin: 0 0 5px 0; ">
+            <!-- Add Image -->
+            <input type="file" name="userprofile_picture"  id="filePhoto" style="visibility: hidden; height: 0;"/>
+            <canvas id='add_event_image_canvas' style="height: 100%; width: 100%;">
+                <!-- Canvas default image implemented in map_block_func.js  -->
+            </canvas>
+        </div>
+        <div id="add_event_name" class="map_block_dynamic" style="height: 8%; margin: 0 0 5px 0; padding: 5px">
+            <!-- Add name -->
+            <textarea id="add_event_name_file" name="summary" style="height:100%; width: 100%" placeholder="输入名称"></textarea>
+        </div>
+        <div id="add_event_summary" class="map_block_dynamic" style="height: 20%; margin: 0 0 5px 0; padding: 5px">
+            <!-- Add Summary -->
+            <textarea id="add_event_summary_file" name="summary" style="height:100%; width: 100%" placeholder="输入简介"></textarea>
+        </div>
+        <div id="add_event_content" class="map_block_dynamic" style="height: 45%; overflow-y: scroll; margin: 0 0 5px 0; padding: 5px ">
+            <!-- Add Content -->
+            <textarea id="add_event_content_file" name="content" style="height:100%; width: 100%" placeholder="输入内容"></textarea>
+        </div>
     </div>
+
+    <!-- nav bar -->
+    <nav id="add_event_info_nav_bar" style="height: 34px; position: relative; bottom: 0px;">
+        <!-- submit -->
+        <button id="add_event_info_submit" title="提交" style="height:30px; width:30px; position: absolute; top: 2px; left: 60%;" class="button button-circle button-tiny"><i class="fa fa-check"></i></button>
+        
+        <!-- cancel -->
+        <button id="add_event_info_cancel" title="作废" style="height:30px; width:30px; position: absolute; top: 2px; left: 75%;" class="button button-circle button-tiny"><i class="fa fa-trash"></i></button>
+
+        <!-- cancel -->
+        <button id="add_event_info_hide" title="隐藏" style="height:30px; width:30px; position: absolute; top: 2px; left: 45%;" class="button button-circle button-tiny"><i class="fa fa-minus"></i></button>
+    </nav>
 </div>

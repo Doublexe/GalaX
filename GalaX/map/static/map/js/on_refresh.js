@@ -1,14 +1,51 @@
-import {getPosition} from './baidu_map/utils.js';
-import {render_example_to_info, render_recom} from './render.js';
+import {getPosition, map_anchor, jump_all} from './utils.js';
+import {render_example_to_info, render_recom, clear_recom, mark_all} from './render.js';
+import { map } from './baidu_map/generation.js';
 
 // On document refresh, load nearby events data.
 $(document).ready(
-    function () {
-        window.navigator.geolocation.getCurrentPosition(success,error);
-    }
-)
+    render_nearby
+);
 
 
+/** Render nearby events and recommendations. */
+function render_nearby () {
+    window.navigator.geolocation.getCurrentPosition(success,error);
+};
+
+/** Render nearby events of a position */
+function render_center_nearby (position) {
+    // Ajax GET request. Get nearby events
+    $.ajax({
+        url: "/map/nearby",
+        method: 'POST',
+        dataType: 'json', // Assign json will automatically parse json response.
+        data: JSON.stringify({
+            'this_position': current_position
+        }),
+        success: function (events) {
+            if (events == null || events.length == 0) {  
+                clear_recom();
+                map.clearOverlays();
+            } else {
+                render_example_to_info(events);
+                clear_recom();
+                map.clearOverlays();
+                render_recom(events); // these shouldn't be nearbys, but here assume nearby=recommend
+                mark_all(events);
+                jump_all();
+                console.log(current_position);
+            }
+        },
+    });
+};
+
+
+// TODO: default
+var current_position = {
+    lng: 104.0668,
+    lat: 30.5728
+};
 //获取地理信息成功时的回调函数
 function success(position) {
     // alert("成功获取您的地理信息");
@@ -17,34 +54,28 @@ function success(position) {
     //coords属性
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    var position = {
-        this_position: [longitude, latitude],
-    }
     //打印纬度,经度信息
     // console.log(latitude);
     // console.log(longitude);
 
+    // Anchor the map
+    map_anchor(longitude, latitude);
+    current_position = {
+        lng: longitude,
+        lat: latitude
+    };
+
     // Ajax GET request. Get nearby events
-    $.ajax({
-        url: "/map/nearby",
-        method: 'POST',
-        dataType: 'json', // Assign json will automatically parse json response.
-        data: JSON.stringify(position) ,
-        // 
-        success: function (events) {
-            render_example_to_info(events);
-            render_recom(events);
-        },
-    });
-}
+    render_center_nearby(current_position);
+};
 
 
 //获取地理信息失败时的回调函数
 function error(msg) {
     alert("获取您的地理信息失败");
-}
+};
 
-
+export {current_position, render_center_nearby, render_nearby};
 
 
 

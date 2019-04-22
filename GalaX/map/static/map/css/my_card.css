@@ -1,10 +1,38 @@
 /* Add shadows to create the "card" effect */
 .my_card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
     transition: box-shadow 0.5s ease-in-out;
+    background-color: white; 
   }
   
 /* On mouse-over, add a deeper shadow */
 .my_card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+/* No hovering transition */
+.my_static_card {
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+
+/* 
+horizontal scrolling container:
+https://codeburst.io/how-to-create-horizontal-scrolling-containers-d8069651e9c6
+*/
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.scrolling-wrapper.card {
+  display: inline-block;
+  width: 20%;
+  border: none;
+}
+
+.canvas_btn:hover {
+  background-color: #3e8e41;
 }

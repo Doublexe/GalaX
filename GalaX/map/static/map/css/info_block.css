@@ -1,6 +1,26 @@
-#info_image, #info_summary {
+#info_image, #info_summary, #add_event_image_canvas {
  border-radius: 12px;
  border-color: rgba(0,0,0,0.2);
  border-style: solid;
  margin: 0 0 5px 0; 
 }
+
+#info_nav_bar, #add_event_info_nav_bar {
+ border-color: #e7e7e7;
+ background-color:  rgb(238, 235, 235);
+}
+
+#add_event_info_submit, #add_event_info_cancel, #add_event_info_hide {
+ background-color: #ccc;
+}
+
+/* #filePhoto {
+ position:absolute;
+ width:300px;
+ height:400px;
+ top:-50px;
+ left:0;
+ z-index:2;
+ opacity:0;
+ cursor:pointer;
+} */

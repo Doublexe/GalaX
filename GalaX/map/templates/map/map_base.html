@@ -14,12 +14,17 @@
 {% block css %}
     {% include 'map/components/map_block_head.html' %}
     {% include 'map/components/info_block_head.html' %}
+    {% include 'map/components/recom_block_head.html' %}
 
     <!-- general css -->
     <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_card.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_fade.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_shape.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_switch.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'map/css/buttons.css' %}">
+    <!-- 使用buttons字体图标时才需要加载 Font-Awesome -->
+    <link href="http://cdn.bootcss.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    
     <style>
         body, html {height: 100%;}
     </style>
@@ -31,6 +36,9 @@
     <!-- map block dynamic -->
     <script src="{% static 'map/js/map_block_dynamic.js' %}" type="module"></script>
     <script src="{% static 'map/js/on_refresh.js' %}" type="module"></script>
+    <script src="{% static 'map/js/utils.js' %}" type="module"></script>
+    <script src="{% static 'map/js/map_block_interactive.js' %}" type="module"></script>
+    <script src="{% static 'map/js/map_block_func.js' %}" type="module"></script>
 {% endblock %}
 
 {% block content %}
@@ -39,18 +47,18 @@
     <div class="row" id="all_blocks" style="height:100%">
         <div class="col-md-9 my_fade" id="left_blocks" style="height:100%">
 
-            <div id="map_block" class="my_fade" style="height: 80%">
+            <div id="map_block" class="my_fade" style="height: 80%; width: 100%; padding-bottom: 10px;">
                 {% include 'map/components/map_block.html' %}
             </div>
 
-            <div id="recom_block" class="my_fade" style="height:20%">
+            <div id="recom_block" class="my_fade" style="height:20%; width: 100%;">
                 {% include 'map/components/recom_block.html' %}
             </div>
 
         </div>
 
         <div class="col-md-3 map_block_dynamic_fade" id="right_blocks" style="height:100%">
-            <div id="info_block" class="my_fade" style="height:100%">
+            <div id="info_block" class="my_fade" style="height:100%; position: relative;">
                 {% include 'map/components/info_block.html' %}
             </div>
 
