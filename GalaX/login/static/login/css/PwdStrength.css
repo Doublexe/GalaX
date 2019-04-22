@@ -1,0 +1,42 @@
+//strengthLv0 代表为达到校验规则时的样式
+//strengthLv1 代表密码强度弱时的样式
+//strengthLv2 代表密码强度中等时的样式
+//strengthLv3 代表密码强度强时的样式
+#PwdDv {
+    width: 300px;
+    height: 200px;
+    position: absolute;
+    left: 300px;
+    top: 100px;
+}
+
+.strengthLv0 {
+    height: 6px;
+    width: 120px;
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+
+.strengthLv1 {
+    background: red;
+    height: 6px;
+    width: 40px;
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+
+.strengthLv2 {
+    background: orange;
+    height: 6px;
+    width: 80px;
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+
+.strengthLv3 {
+    background: green;
+    height: 6px;
+    width: 120px;
+    border: 1px solid #ccc;
+    padding: 2px;
+}

@@ -78,7 +78,13 @@ This will not be escaped: <b>
 ```
 4.17
 
-1.事件（Event）model创建完成，相应url访问api初步形成
-2.使用Pillow=5.4.1
-3.事件在Map中的information显示完成
+1. 事件（Event）model创建完成，相应url访问api初步形成
+2. 使用Pillow=5.4.1
+3. 事件在Map中的information显示完成
 
+
+4.20
+1. 登陆改密码完成。
+
+4.21
+1. 添加了密码强度的显示模块。
