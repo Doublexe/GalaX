@@ -1,6 +1,6 @@
 function attachEvents(id_password) {
     var Input=document.getElementById(id_password);
-    
+    Input.addEventListener('onekeyup',ChangePWDStrength,false);
     alert(id_password);
     function getLvl(txt) {
         //默认级别是0
@@ -19,7 +19,7 @@ function attachEvents(id_password) {
         }
         return lvl;
     }
-    Input.onekeyup = function () {
+     function ChangePWDStrength() {
         alert(this.value);
         document.querySelector('#strengthLevel').className = "strengthLv" + (this.value.length < 6 ? 0 : getLvl(this.value));
     }

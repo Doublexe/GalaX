@@ -25,6 +25,11 @@
                     <label for="{{ passchg_form.password0.id_for_label }}" style="color:floralwhite">原密码</label>
                     {{ passchg_form.password0}}
                 </div>
+                <div id="PwdDv" class="form-group">
+                    <label style="color:floralwhite">密码强度：</label>
+                    <em id="strength"></em>
+                    <div id="strengthLevel" class="strengthLv0"></div>
+                </div>
                 <div class="form-group">
                     {{ passchg_form.password1.errors }}
                     <label for="{{ passchg_form.password1.id_for_label }}" style="color:floralwhite">新密码:</label>
@@ -36,7 +41,29 @@
                     {{ passchg_form.password2 }}
                 </div>
 
-
+                <script type="text/javascript">
+                    function getLvl(txt) {
+                        //默认级别是0
+                        var lvl = 0;
+                        //判断这个字符串中有没有数字
+                        if (/[0-9]/.test(txt)) {
+                            lvl++;
+                        }
+                        //判断字符串中有没有字母
+                        if (/[a-zA-Z]/.test(txt)) {
+                            lvl++;
+                        }
+                        //判断字符串中有没有特殊符号
+                        if (/[^0-9a-zA-Z_]/.test(txt)) {
+                            lvl++;
+                        }
+                        return lvl;
+                    }
+                    document.getElementById('{{passchg_form.password1.auto_id}}').onkeyup = function () {
+                        document.querySelector('#strengthLevel').className = "strengthLv" + (this.value
+                            .length < 6 ? 0 : getLvl(this.value));
+                    };
+                </script>
                 <button type="reset" class="btn btn-default pull-left">重置</button>
                 <button type="submit" class="btn btn-primary pull-right">提交</button>
             </form>
