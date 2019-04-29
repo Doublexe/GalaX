@@ -58,7 +58,7 @@ def login(request):
             try:
                 user = models.User.objects.get(name=username)
                 if not user.has_confirmed:
-                    message = "该用户还未通过邮件确认！"
+                    message = "还未通过邮件确认！"
                     return render(request, 'login/login.html', locals())
                 if user.password == hash_code(password):  # 哈希值和数据库内的值进行比对
                     request.session['is_login'] = True
@@ -119,7 +119,10 @@ def register(request):
 
                 message = '请前往注册邮箱，进行邮件确认！'
                 return render(request, 'login/confirm.html', locals())  # 跳转到等待邮件确认页面。
-    register_form = forms.RegisterForm()
+        else:#is not valid
+            pass
+    else:
+        register_form = forms.RegisterForm()
     return render(request, 'login/register.html', locals())
 
 def logout(request):
@@ -186,3 +189,105 @@ def user_confirm(request):
         confirm.delete()
         message = '感谢确认，请使用账户登录！'
         return render(request, 'login/confirm.html', locals())
+    
+def password_lost(request):
+    """forgot password deals"""
+    data = {}
+    data['form_title'] = u'重置密码'
+    data['submit_name'] = u'　确定　'
+ 
+    if request.method == 'POST':
+        #表单提交
+        form = ForgetPwdForm(request.POST)
+        
+        #验证是否合法
+        if form.is_valid():
+            #修改数据库
+            email = form.cleaned_data['email']
+            pwd = form.cleaned_data['password2']
+            user = User.objects.get(email = email)
+            user.password=pwd
+            user.save()
+ 
+            #删除验证码
+            ex = User.objects.filter(user=user)
+            if ex.count() > 0:
+                ex.delete()
+ 
+            #重新登录
+            user = authenticate(username=user.username, password=pwd)
+            if user is not None:
+                login(request, user)
+ 
+            #页面提示
+            data['goto_url'] = reverse('user_info')
+            data['goto_time'] = 3000
+            data['goto_page'] = True
+            data['message'] = u'重置密码成功，请牢记新密码'
+            return render_to_response('message.html',data)
+    else:
+        #正常加载
+        form = ForgetPwdForm()
+    data['form'] = form
+    return render(request, 'user/pwd_forget.html', data)
+ 
+def get_email_code(request):
+    """get email code"""
+    email = request.GET.get('email', '')
+    code = ''.join(random.sample(string.digits + string.letters, 6))
+ 
+    data = {}
+    data['success'] = False
+    data['message'] = ''
+    
+    try:
+        #检查邮箱
+        users = User.objects.filter(email = email)
+        if len(users)==0:
+            data['success'] = False
+            data['message'] = u'此邮箱未注册'
+            raise Exception, data['message']
+        
+        user = users[0]
+ 
+        #检查短时间内是否有生成过验证码
+        user_ex = User.objects.filter(user = user)
+        if len(user_ex)>0:
+            user_ex = user_ex[0]
+ 
+            #两个datetime相减，得到datetime.timedelta类型
+            create_time = user_ex.valid_time
+            td = timezone.now() - create_time
+            if td.seconds < 60:
+                data['message'] = u'1分钟内发送过一次验证码'
+                raise Exception, data['message']
+        else:
+            #没有则新建
+            user_ex = User(user = user)
+ 
+        #写入数据库
+        user_ex.valid_code = code
+        user_ex.valid_time = timezone.now()
+        user_ex.save()
+ 
+        #发送邮件
+        subject=u'[yshblog.com]激活您的帐号'
+        message=u"""
+            <h2>杨仕航的博客(<a href='http://yshblog.com/' target=_blank>yshblog.com</a>)<h2><br />
+            <p>重置密码的验证码(有效期10分钟)：%s</p>
+            <p><br/>(请保管好您的验证码)</p>
+            """ % code
+ 
+        send_to=[email]
+        fail_silently=True  #发送异常不报错
+ 
+        msg=EmailMultiAlternatives(subject=subject,body=message,to=send_to)
+        msg.attach_alternative(message, "text/html")
+        msg.send(fail_silently)
+ 
+        data['success'] = True
+        data['message'] = 'OK'
+    except Exception as e:
+        pass
+    finally:
+        return HttpResponse(json.dumps(data), content_type="application/json")
