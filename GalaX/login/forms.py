@@ -2,6 +2,8 @@ from django import forms
 from captcha.fields import CaptchaField
 from captcha.fields import CaptchaTextInput
 from django.core.exceptions import ValidationError
+from . import models
+from django.utils import timezone
 class UserForm(forms.Form):
     username = forms.CharField(label="用户名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label="密码", max_length=12, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
@@ -73,59 +75,65 @@ class ForgetPwdForm(forms.Form):
                         'invalid': '密码必须至少包含数字和字母',
                         'min_length': "密码长度不能小于6个字符",
                         'max_length': "密码长度不能大于12个字符"},
-        widget=forms.PasswordInput(attrs={'class':'form-control', 'id':'password1','placeholder':u'请输入6-36位的密码'}))
+        widget=forms.PasswordInput(attrs={'class':'form-control', 'id':'password1','placeholder':u'请输入6-12位的密码'}))
+    
     password2 = forms.CharField(
         label=u'确认密码', 
         min_length=6,
         max_length=12,
-        widget=forms.PasswordInput(attrs={'class':'form-control', 'id':'password2','placeholder':u'重复新的密码确保正确'}))
-    captcha = CaptchaField(label=u'验证码', widget=CaptchaTextInput(attrs={'class': 'form-control'}))
+        widget=forms.PasswordInput(attrs={'class':'form-control', 'id':'password2','placeholder':u'重复新的密码'}))
+    
+    check_code = forms.CharField(label=u'　验证码', 
+        widget=forms.TextInput(attrs={'class':'form-control', 'id':'check_code','placeholder':u'输入邮箱验证码'}))
  
     #验证邮箱是否存在
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        users = User.objects.filter(email = email)
+        users = models.User.objects.filter(email = email)
  
         if users.count() == 0:
             raise ValidationError(u'该邮箱没有被注册，请检查')
         return email
  
     #验证两个新密码是否一致
-    def clean_pwd_2(self):
+    def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
  
         if password1 != password2:
-            raise ValidationError(u'两次输入的密码不一致，再输入一次吧')
+            raise ValidationError(u'两次输入的密码不一致')
         return password2
  
     #验证验证码是否正确
     def clean_check_code(self):
-        try:
-            #获取对应的用户
-            email = self.cleaned_data.get('email')
-            check_code = self.cleaned_data.get('check_code')
-            user = User.objects.get(email = email)
- 
-            #获取对应的用户拓展信息，验证验证码
-            user_ex = User_ex.objects.filter(user = user)
-            if user_ex.count > 0:
-                user_ex = user_ex[0]
-            else:
-                raise ValidationError(u'未获取验证码')
-            
-            if user_ex.valid_code != check_code:
-                raise ValidationError(u'验证码不正确')
-            
-            #验证有效期
-            now = timezone.now() #用这个回去当前时间
-            create = user_ex.valid_time
- 
-            #两个datetime相减，得到datetime.timedelta类型
-            td = now - create
-            if td.seconds/60 >= 10:
-                raise ValidationError(u'验证码失效')
- 
-            return check_code
-        except Exception as e:
-            raise ValidationError(u'验证码不正确或失效')
+        #获取对应的用户
+        email = self.cleaned_data.get('email')
+        check_code = self.cleaned_data.get('check_code')
+        print("successful in check:email:{},check_code:{}",email,check_code)
+        user = models.User.objects.filter(email = email)
+        print("successful get email:{}",len(user))
+        #获取对应的用户拓展信息，验证验证码
+        user_ex = models.PWDReset.objects.filter(user = user)
+        print("successful get code:{}",len(user_ex))
+        if len(user_ex) > 0:
+            user_ex = user_ex[0]
+        else:
+            raise ValidationError(u'未获取验证码')
+        
+        if user_ex.valid_code != check_code:
+            raise ValidationError(u'验证码不正确')
+        print("valid code::{}",user_ex.valid_code )
+        print("check code::{}",check_code)
+        #验证有效期
+        now = timezone.now() #用这个回去当前时间
+        create_time = user_ex.valid_time
+
+        #两个datetime相减，得到datetime.timedelta类型
+        td = now - create_time
+        print("time second:",td.seconds)
+        if td.seconds/60 >= 10:#10分钟
+            print("time too long")
+            raise ValidationError(u'验证码失效')
+        print("final check code::{}",check_code)
+
+        return check_code

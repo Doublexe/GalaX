@@ -24,11 +24,13 @@ urlpatterns = [
     
 
     url(r'^index/', views.index),
-    url(r'^login/', views.login),
-    url(r'^register/', views.register),
+    url(r'^login/', views.login,name='login'),
+    url(r'^register/', views.register,name='register'),
     url(r'^logout/', views.logout),
     url(r'^passchg/', views.passchg),
     url(r'^confirm/$', views.user_confirm),
+    url(r'password_lost', views.password_lost, name='password_lost'),
+    url(r'get_email_code',views.get_email_code, name='get_email_code'),
     
     url(r'^captcha', include('captcha.urls'))
 ]
