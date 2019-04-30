@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+ 
+{% block title %}Galax{% endblock %}
+ 
+{% block content %}
+    {#显示消息的页面#}
+    <body style="background-image: url({% static 'image/galax6.jpg' %});background-size:100%;"></body>
+    <div class="row">
+        <center><h4 style="line-height:300%;" style="color:floralwhite">{{message|safe}}</h4>        <br>
+            <a href="/login/">如果长时间没有跳转，可以点此跳转</a></center>
+
+    </div>
+    <script type="text/javascript">
+        {#页面调整控制#}
+        {% if goto_page %}
+            $(function(){
+                window.setTimeout(function(){ 
+                    window.location = '{{goto_url}}';
+                },{{goto_time}});
+            });
+        {% endif %}
+    </script>
+{% endblock %}
+ 
+{% block extra_footer %}
+
+{% endblock %}

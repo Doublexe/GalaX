@@ -1,12 +1,15 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render_to_response, render,redirect
 from django.conf import settings
 from login import forms
 # Create your views here.
 import hashlib
 import datetime
 from . import models
-
+import json, time, datetime, random, string
+from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponse
+from django.utils import timezone
+from django.core.urlresolvers import reverse
 
 def hash_code(s, salt='mysite'):# 加点盐
     h = hashlib.sha256()
@@ -20,22 +23,36 @@ def make_confirm_string(user):
     models.ConfirmString.objects.create(code=code, user=user,)
     return code
 
-def send_email(email, code):
+def send_email(email, code,function_code):
 
     from django.core.mail import EmailMultiAlternatives
-
-    subject = '来自Galax的注册确认邮件'
-
     text_content = '''感谢注册Galax，这里是Galax管理员。\
-                    如果你看到这条消息，说明你的邮箱服务器不提供HTML链接功能，请联系管理员（回复本邮件即可）！'''
+                        如果你看到这条消息，说明你的邮箱服务器不提供HTML链接功能，请联系管理员（回复本邮件即可）！'''
+                        
+    if function_code=='register':
+        subject = '来自Galax的注册确认邮件'
 
-    html_content = '''
-                    <p>感谢注册，您可以点击下面链接来进行注册:<br>
-                    <a href="http://{}/confirm/?code={}" target=blank>点击此进行注册</a><br>
-                    这里是Galax，一个专注分享与热点事件的微博！</p>
-                    <p>请点击站点链接完成注册确认！</p>
-                    <p>此链接有效期为{}天！</p>
-                    '''.format('127.0.0.1:8000', code, settings.CONFIRM_DAYS)
+        text_content = '''感谢注册Galax，这里是Galax管理员。\
+                        如果你看到这条消息，说明你的邮箱服务器不提供HTML链接功能，请联系管理员（回复本邮件即可）！'''
+
+        html_content = '''
+                        <p>感谢注册，您可以点击下面链接来进行注册:<br>
+                        <a href="http://{}/confirm/?code={}" target=blank>点击此进行注册</a><br>
+                        这里是Galax，一个专注分享与热点事件的微博！</p>
+                        <p>请点击站点链接完成注册确认！</p>
+                        <p>此链接有效期为{}天！</p>
+                        '''.format('127.0.0.1:8000', code, settings.CONFIRM_DAYS)
+    elif function_code=='passReset':
+        subject = '来自Galax的密码重置邮件'
+        html_content = '''
+                        <p>感谢使用！您可以使用以下验证码来进行密码重置:<br>
+                        <em>{}</em><br>
+                        这里是Galax，一个专注分享与热点事件的微博！</p>
+                        <p>请点击站点链接即可重置密码！</p>
+                        <p>此验证码有效期为10分钟！</p>
+                        '''.format(code)
+    else:
+        pass
 
     msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_HOST_USER, [email])
     msg.attach_alternative(html_content, "text/html")
@@ -58,7 +75,7 @@ def login(request):
             try:
                 user = models.User.objects.get(name=username)
                 if not user.has_confirmed:
-                    message = "该用户还未通过邮件确认！"
+                    message = "还未通过邮件确认！"
                     return render(request, 'login/login.html', locals())
                 if user.password == hash_code(password):  # 哈希值和数据库内的值进行比对
                     request.session['is_login'] = True
@@ -70,8 +87,8 @@ def login(request):
             except:
                 message = "用户不存在！"
         return render(request, 'login/login.html', locals())
-
-    login_form = forms.UserForm()
+    else:
+        login_form = forms.UserForm()
     return render(request, 'login/login.html', locals())
 
 
@@ -115,11 +132,14 @@ def register(request):
                 new_user.save()
 
                 code = make_confirm_string(new_user)
-                send_email(email, code)
+                send_email(email, code,function_code='register')
 
                 message = '请前往注册邮箱，进行邮件确认！'
                 return render(request, 'login/confirm.html', locals())  # 跳转到等待邮件确认页面。
-    register_form = forms.RegisterForm()
+        else:#is not valid
+            pass
+    else:
+        register_form = forms.RegisterForm()
     return render(request, 'login/register.html', locals())
 
 def logout(request):
@@ -160,8 +180,9 @@ def passchg(request):
                 else:
                     message = "原密码不正确！"
                     return render(request, 'login/passchg.html', locals())
-        passchg_form = forms.PWChgForm()
-        return render(request, 'login/passchg.html', locals())
+        else:
+            passchg_form = forms.PWChgForm()
+            return render(request, 'login/passchg.html', locals())
     #未登陆转登陆界面
     return redirect('/login/')
 
@@ -186,3 +207,100 @@ def user_confirm(request):
         confirm.delete()
         message = '感谢确认，请使用账户登录！'
         return render(request, 'login/confirm.html', locals())
+
+def password_lost(request):
+    """forgot password deals"""
+    data = {}
+    data['form_title'] = u'重置密码'
+    data['submit_name'] = u'　确定　'
+ 
+    if request.method == 'POST':
+        #表单提交
+        form = forms.ForgetPwdForm(request.POST)
+        
+        #验证是否合法
+        if form.is_valid():
+            #修改数据库
+            email = form.cleaned_data['email']
+            pwd = form.cleaned_data['password2']
+            user = models.User.objects.get(email = email)
+            user.password = hash_code(pwd)
+            user.save()
+ 
+            #删除验证码
+            ex = models.PWDReset.objects.filter(user=user)
+            if ex.count() > 0:
+                ex.delete()
+ 
+            #重新登录
+            #user = authenticate(username=user.username, password=pwd)
+            #if user is not None:
+            #    login(request, user)
+ 
+            #页面提示
+            data['goto_url'] = reverse('login')
+            data['goto_time'] = 3000
+            data['goto_page'] = True
+            data['message'] = u'重置密码成功，请牢记新密码'
+            return render_to_response('login/message.html',data)
+    else:
+        #正常加载
+        form = forms.ForgetPwdForm()
+    data['form'] = form
+    return render(request, 'login/passReset.html', data)
+
+
+def get_email_code(request):
+    """get email code"""
+    email = request.GET.get('email', '')#得到前端文件中的Email地址
+    code = ''.join(random.sample(string.digits + string.ascii_letters, 6))
+    data = {}
+    data['success'] = False
+    data['message'] = ''
+    print(code)
+    try:
+        #检查邮箱
+        print("check email")
+        users = models.User.objects.filter(email = email)
+        print(len(users))
+        if len(users)==0:
+            print("check user==0")
+            data['success'] = False
+            data['message'] = u'此邮箱未注册'
+            raise Exception(data['message'])
+        
+        user = users[0]
+        
+        print(user.name)
+        #检查短时间内是否有生成过验证码
+        user_ex = models.PWDReset.objects.filter(user = user)
+        print(len(user_ex))
+        if len(user_ex)>0:
+            user_ex = user_ex[0]
+            print("time is not so long")
+            #两个datetime相减，得到datetime.timedelta类型
+            create_time = user_ex.valid_time
+            td = timezone.now() - create_time
+            if td.seconds < 60:
+                data['message'] = u'1分钟内发送过一次验证码'
+                raise Exception(data['message'])
+        else:
+            #没有则新建
+            print("come to new user")
+            user_ex = models.PWDReset(user = user)
+            #print(user_ex)
+        
+        #写入数据库
+        user_ex.valid_code = code
+        user_ex.valid_time = timezone.now()
+        user_ex.save()
+        print(user_ex.valid_code)
+        print(user_ex.valid_time)
+        #发送邮件
+        send_email(email, code,function_code='passReset')
+        data['success'] = True
+        data['message'] = 'OK'
+    except Exception as e:
+        pass
+    finally:
+        return HttpResponse(json.dumps(data), content_type="application/json")
