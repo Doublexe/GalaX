@@ -1,8 +1,13 @@
+import sys
+import os
+from os.path import dirname
+sys.path.extend([x[0] for x in os.walk(dirname(dirname(__file__)))])
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .models import Event
+from map.models import Event
 import json
 from django.views.decorators.csrf import csrf_exempt
 import base64

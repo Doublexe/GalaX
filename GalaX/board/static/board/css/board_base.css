@@ -1,0 +1,98 @@
+/* .grid-high {
+  margin-bottom: 2em; /* masonry requires */
+
+
+/* Add shadows to create the "card" effect */
+.grid-content {
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  transition: box-shadow .5s ease-in-out, width .5s ease-in-out, height .5s ease-in-out;
+}
+
+
+.ss {
+  transform: rotateY( 180deg ) ;
+  transition: transform 0.5s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.grid-content:hover {
+box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+
+/** profile */
+.card-profile {
+  width: 25%;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 1);
+  /* Transform will cause bootstrap alignment problem. Use m-n1: negative 10% */
+  /* transform: translate(30%, -50%); */
+}
+
+.card-profile-normal {
+  width: 20%;
+  overflow: hidden;
+  margin: 3px;
+  border: 3px solid rgba(255, 255, 255, 1);
+}
+
+
+.card-body-up {
+  transform: translate(0, -30px);
+}
+
+.card-hide {
+  transition: opacity .5s ease-in-out, visibility .5s ease-in-out;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Hover not working on hidden element */
+#function_card {
+  transition: opacity .3s ease-in-out;
+  position: fixed;
+  /* visibility: hidden; */
+  opacity: 0;
+}
+
+#function_card:hover {
+  /* visibility: visible; */
+  opacity: 1;
+}
+
+.event-content-hide, .event-comment-hide, .event-usual-hide, .grid-comment-control-hide {
+  /* transition: opacity .05s ease-in-out, visibility .05s ease-in-out; */
+  visibility: hidden;
+  opacity: 0;
+  max-height: 0;
+}
+
+.event-comment-content{
+  resize: none;
+}
+
+
+/* This has to be defined before grid-dynamic-show. Why???? */
+.grid-comment-hide {
+  visibility: hidden;
+  opacity: 0;
+  max-width: 0;
+}
+
+.grid-dynamic-show {
+  visibility: visible;
+  opacity: 1;
+  max-height: none;
+  max-width: none;
+}
+
+/* Shapes */
+.divider {
+  border: 0; 
+  height: 1px; 
+  background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+  background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+  background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+  background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0); 
+}
+

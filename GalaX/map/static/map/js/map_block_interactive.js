@@ -21,7 +21,9 @@ map.addEventListener(
   };
   if (is_far_away(candidate_position, current_position)) {
    assign_position(current_position, candidate_position);
+   add_event_candidate_marker.disableMassClear();
    render_center_nearby(current_position);
+   add_event_candidate_marker.enableMassClear();
   };
  }
 );

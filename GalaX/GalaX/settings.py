@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'map',
+    'board',
     'user_information.apps.UserInformationConfig',
     'login',
     'captcha',
@@ -79,26 +80,26 @@ WSGI_APPLICATION = 'GalaX.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 #Tang:Please use this for you mysql database,don't change mysql's default localhost port.
 #For UESR name,if you don't change default setting,it is root.Or you can change it to your username.
 #I recommend to use the sql file in QQ group.
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Galax_database',
-        'USER': 'Galax_database_admin',
-        'PASSWORD': '123test567',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'Galax_database',
+#         'USER': 'Galax_database_admin',
+#         'PASSWORD': '123test567',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
