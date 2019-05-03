@@ -1,48 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'login/logintemplate.html' %}
 {% load staticfiles %}
 
 {% block title %}修改密码{% endblock %}
-<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
-<link rel="stylesheet" href="https://unpkg.com/mobi.css/dist/mobi.min.css">
-<style>
-    .errorlist {
-        color: red;
-    }
-</style>
-{% block content %}
 
-<body style="background-image: url({% static 'image/galax4.jpg' %});background-size:100%;">
-    <div class="container">
-        <div class="col-md-4 col-md-offset-4">
-            <form class='form-passchg' action="/passchg/" method="post">
-                {% if message %}
-                <div class="alert alert-warning">{{ message }}</div>
-                {% endif %}
-                {% csrf_token %}
-                <h2 class="text-center" style="color:floralwhite">修改密码</h2>
-                <div class="form-group">
-                    {{ passchg_form.password0.errors }}
-                    <label for="{{ passchg_form.password0.id_for_label }}" style="color:floralwhite">原密码</label>
-                    {{ passchg_form.password0}}
-                </div>
-                <div id="PwdDv" class="form-group">
-                    <label style="color:floralwhite">密码强度：</label>
-                    <em id="strength"></em>
-                    <div id="strengthLevel" class="strengthLv0"></div>
-                </div>
-                <div class="form-group">
-                    {{ passchg_form.password1.errors }}
-                    <label for="{{ passchg_form.password1.id_for_label }}" style="color:floralwhite">新密码:</label>
-                    {{ passchg_form.password1 }}
-                </div>
-                <div class="form-group">
-                    {{ passchg_form.password2.errors }}
-                    <label for="{{ passchg_form.password2.id_for_label }}" style="color:floralwhite">再次确认密码:</label>
-                    {{ passchg_form.password2 }}
-                </div>
-                <button type="reset" class="btn btn-default pull-left">重置</button>
-                <button type="submit" class="btn btn-primary pull-right">提交</button>
-            </form>
-        </div>
-    </div> <!-- /container -->
-    {% endblock %}
+    {% block form %}
+    {% include 'login/passchgform.html' %}
+{% endblock %}
