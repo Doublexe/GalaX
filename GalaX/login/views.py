@@ -19,7 +19,7 @@ def hash_code(s, salt='mysite'):# 加点盐
 
 def make_confirm_string(user):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    code = hash_code(user.name, now)
+    code = hash_code(user.username, now)
     models.ConfirmString.objects.create(code=code, user=user,)
     return code
 
@@ -65,6 +65,7 @@ def index(request):
 
 def login(request):
     if request.session.get('is_login', None):
+        #如果已经登陆
         return redirect("/index/")
     if request.method == "POST":
         login_form = forms.UserForm(request.POST)
@@ -73,14 +74,14 @@ def login(request):
             username = login_form.cleaned_data['username']
             password = login_form.cleaned_data['password']
             try:
-                user = models.User.objects.get(name=username)
+                user = models.User.objects.get(username=username)
                 if not user.has_confirmed:
                     message = "还未通过邮件确认！"
                     return render(request, 'login/login.html', locals())
                 if user.password == hash_code(password):  # 哈希值和数据库内的值进行比对
                     request.session['is_login'] = True
                     request.session['user_id'] = user.id
-                    request.session['user_name'] = user.name
+                    request.session['user_name'] = user.username
                     return redirect('/index/')
                 else:
                     message = "密码不正确！"
@@ -110,7 +111,7 @@ def register(request):
                 message = "两次输入的密码不同！"
                 return render(request, 'login/register.html', locals())
             else:
-                same_name_user = models.User.objects.filter(name=username)
+                same_name_user = models.User.objects.filter(username=username)
                 if same_name_user:  # 用户名唯一
                     message = '用户已经存在，请重新选择用户名！'
                     return render(request, 'login/register.html', locals())
@@ -125,9 +126,10 @@ def register(request):
                 # 当一切都OK的情况下，创建新用户
 
                 new_user = models.User()
-                new_user.name = username
+                new_user.username = username
                 new_user.password = hash_code(password1)  # 使用加密密码
                 new_user.email = email
+                new_user.phone_number = phone_number
                 new_user.sex = sex
                 new_user.save()
 
@@ -164,7 +166,7 @@ def passchg(request):
                 password1 = passchg_form.cleaned_data['password1']
                 password2 = passchg_form.cleaned_data['password2']
                 username_session=request.session['user_name']
-                user = models.User.objects.get(name=username_session)
+                user = models.User.objects.get(username=username_session)
                 if user.password == hash_code(password_prime):  # 原密码哈希值和数据库内的值进行比对
                     if password1 != password2:  # 判断两次密码是否相同
                         message = "两次输入的密码不同！"
@@ -271,7 +273,7 @@ def get_email_code(request):
         
         user = users[0]
         
-        print(user.name)
+        
         #检查短时间内是否有生成过验证码
         user_ex = models.PWDReset.objects.filter(user = user)
         print(len(user_ex))

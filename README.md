@@ -95,3 +95,12 @@ This will not be escaped: <b>
 
 5.3
 1. 对登陆、注册部分进行了重写，对导航栏进行了重写。
+2. base进行了分离，现在base包含导航nav与尾部信息footer两部分。
+3.(未装载，不必理会) pip install django-contrib-comments
+   python ./manage.py syncdb
+
+5.6
+1. 将自定义用户变成了abstractuser,现在可以使用django验证系统了。
+> AbstractUser provides the full implementation of the default User as an abstract model
+2. 设置了文件上传目录。
+3. 

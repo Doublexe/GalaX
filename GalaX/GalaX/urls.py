@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^map/', include('map.urls')),
     url(r'^board/', include('board.urls')),
-    url(r'^user_information/', include('user_information.urls')),
+    url(r'^user_information/', include('user_information.urls'),name='user_information'),
     
 
     url(r'^index/', views.index),
@@ -33,5 +33,7 @@ urlpatterns = [
     url(r'password_lost', views.password_lost, name='password_lost'),
     url(r'get_email_code',views.get_email_code, name='get_email_code'),
     
-    url(r'^captcha', include('captcha.urls'))
+    url(r'^captcha', include('captcha.urls')),
+    
+    
 ]
