@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{# 导入评论库模块的模版标签 #}
+{% load comments %}
+
+{% load staticfiles %}
+
+{% block css %}
+<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
+<link href="{% static 'css/login.css' %}" rel="stylesheet" />
+
+<div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>评论列表</h4>
+        </div>
+     
+        <div class="panel-body">
+            {% get_comment_list for blog as comments %}
+            {% for comment in comments %}
+                <div class="blog_comment" name="F{{comment.id}}">
+                    <p class="comment_title">
+                        #{{ comment.submit_date|date:"Y-m-d H:i"}} @ {{ comment.user_name }}：
+                    </p>
+                    <p class="comment_content">{{ comment.comment }}</p>
+                </div>            
+            {% empty %}
+                <span>暂无评论</span>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block content %}
+
+
+ <!-- /container -->
+ {% block jsScript %}
+
+ {% endblock %}
+
+    {% endblock %}

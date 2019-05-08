@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
+from django.core.urlresolvers import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'user_information.apps.UserInformationConfig',
     'login',
     'captcha',
+
 ]
+#添加sites的应用并设置当前django工程的站点id=1
+#SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -192,3 +195,13 @@ CONFIRM_DAYS = 2
 CAPTCHA_IMAGE_SIZE=(100, 30)
 CAPTCHA_TIMEOUT = '2'
 CAPTCHA_LENGTH = '4'
+
+# User reset to abstractuser
+AUTH_USER_MODEL = 'login.User'
+
+# 文件上传地址
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
+MEDIA_URL = '/upload/' #这个是在浏览器上访问该上传文件的url的前缀
+
+# default login url
+LOGIN_URL = reverse_lazy('login')

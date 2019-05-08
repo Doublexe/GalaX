@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+<script type="text/javascript" src="{% static 'js/jquery-3.3.1.js' %}"></script>
+<link href="{% static 'css/login.css' %}" rel="stylesheet" />
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="{% static 'js/Validform_v5.3.2_min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/Validform.css' %}">
+<link href="{% static 'login/css/PwdStrength.css' %}" rel="stylesheet" />
+<style>
+    .errorlist {
+        color: red;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<body style="background-image: url({% static 'image/galax6.jpg' %});background-size:100%;">
+    <div>
+            <br><br><br>
+        </div>
+    <div class="row align-items-center">
+    <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card login-form-2 my-5">
+          <div class="card-body">
+              {% block form %}
+                
+              {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ <!-- /container -->
+
+    <script type="text/javascript" src="{% static 'login/js/CapchaFresh.js' %}"></script>
+    {% endblock %}

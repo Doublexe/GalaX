@@ -1,16 +1,17 @@
 from django.db import models
 
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
-class User(models.Model):
-
+#class User(models.Model):
+class User(AbstractUser):
     gender = (
         ('male', "男"),
         ('female', "女"),
     )
-
-    name = models.CharField(max_length=128, unique=True)
+    
+    username = models.CharField(max_length=128, unique=True)
     password = models.CharField(max_length=256)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(unique=True, max_length=15)
@@ -18,8 +19,9 @@ class User(models.Model):
     c_time = models.DateTimeField(auto_now_add=True)
     has_confirmed = models.BooleanField(default=False)
 
+
     def __str__(self):
-        return self.name
+        return self.username
     class Meta:
         ordering = ["-c_time"]
         verbose_name = "用户"
@@ -31,9 +33,10 @@ class ConfirmString(models.Model):
     c_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.name + ":   " + self.code
+        return self.user.username + ":   " + self.code
 
-    class Meta:
+    #class Meta:
+    class Meta(AbstractUser.Meta):
 
         ordering = ["-c_time"]
         verbose_name = "确认码"

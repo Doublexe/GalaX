@@ -3,3 +3,42 @@
                                     '{{register_form.password1.auto_id}}').onekeyup,
                                 '{{register_form.password1.auto_id}}');
                         </script>
+
+
+
+
+
+                        {% extends 'login/logintemplate.html' %}
+{% load staticfiles %}
+{% block css %}
+
+<body style="background-image: url({% static 'image/galax2.jpg' %});background-size:100%;"></body>
+<style type="text/css">
+    .form_title {
+        margin-bottom: 1em;
+        padding-bottom: 0.5em;
+        border-bottom: 1px #ccc solid;
+    }
+
+    .main_form div,
+    .form_btn .btn {
+        margin-top: 1em;
+    }
+
+    #panel_form {
+        margin-top: 2em;
+        margin-bottom: 3em;
+    }
+</style>
+{% endblock %}
+
+{% block title %}密码重设{% endblock %}
+
+
+{% block form %}
+{% include 'login/passResetform.html' %}
+{% endblock %}
+
+
+
+

@@ -8,3 +8,6 @@ mysite/__pycache__/
 .gitignore
 .vscode/
 .gitignore
+GalaX/GalaX/__pycache__/
+__pycache__/
+

@@ -83,7 +83,7 @@ class ForgetPwdForm(forms.Form):
         max_length=12,
         widget=forms.PasswordInput(attrs={'class':'form-control', 'id':'password2','placeholder':u'重复新的密码'}))
     
-    check_code = forms.CharField(label=u'　验证码', 
+    check_code = forms.CharField(label=u'验证码', 
         widget=forms.TextInput(attrs={'class':'form-control', 'id':'check_code','placeholder':u'输入邮箱验证码'}))
  
     #验证邮箱是否存在
