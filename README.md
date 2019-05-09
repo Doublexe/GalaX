@@ -101,6 +101,13 @@ This will not be escaped: <b>
 
 5.6
 1. 将自定义用户变成了abstractuser,现在可以使用django验证系统了。
-> AbstractUser provides the full implementation of the default User as an abstract model
-2. 设置了文件上传目录。
-3. 
+2. setting中设置了文件上传目录。
+
+5.8
+1. 扩展了用户信息表，如果之前创建了用户可能需要删除用户后重新创建。
+2. User中name字段被更改为username以适配django abstractuser。
+3. 扩展了用户模型，添加了用户个人信息界面（未完善，由于好友等众多模型未确定，待其它模型确定后再完善此模块）。
+
+5.9
+1. pip install django-friendship,
+2. 
