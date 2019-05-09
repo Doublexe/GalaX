@@ -35,5 +35,5 @@ urlpatterns = [
     
     url(r'^captcha', include('captcha.urls')),
     
-    
+    url(r'^friendship/', include('friendship.urls')),
 ]

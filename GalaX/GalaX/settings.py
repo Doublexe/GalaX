@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'user_information.apps.UserInformationConfig',
     'login',
     'captcha',
+    'friendship',
 
 ]
 #添加sites的应用并设置当前django工程的站点id=1
@@ -203,5 +204,5 @@ AUTH_USER_MODEL = 'login.User'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
 MEDIA_URL = '/upload/' #这个是在浏览器上访问该上传文件的url的前缀
 
-# default login url
+# Default login url
 LOGIN_URL = reverse_lazy('login')

@@ -42,8 +42,8 @@
           <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
             aria-expanded="false">个人信息 <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a class="nav-link" href="{% url 'profile_view' id=user.id %}">个人信息查看</a></li>
-            <li><a class="nav-link" href="{% url 'profile_edit' id=user.id %}">个人信息修改</a></li>
+            <li><a class="nav-link" href="{% url 'profile_view' id=request.session.user_id %}">个人信息查看</a></li>
+            <li><a class="nav-link" href="{% url 'profile_edit' id=request.session.user_id %}">个人信息修改</a></li>
             <li><a class="nav-link" href="#">Something else here</a></li>
             <li role="separator" class="divider"></li>
             <li><a class="nav-link" href="#">Separated link</a></li>
