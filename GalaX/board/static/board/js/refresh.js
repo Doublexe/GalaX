@@ -4,7 +4,7 @@ import { local_buffer, render } from './render.js';
 // On document refresh, load nearby events data.
 $(document).ready(
  () => {
-  buffer_nearby;
+  buffer_nearby();
   var option = $("#event-filter option:selected").text();
   render(local_buffer, option);
  }
@@ -14,27 +14,31 @@ $(document).ready(
 // Get selected content from <select>: https://stackoverflow.com/questions/1643227/get-selected-text-from-a-drop-down-list-select-box-using-jquery
 $("#event-filter").change(function () {
  var option = $("#event-filter option:selected").text();
+ buffer_category(option);
  render(local_buffer, option);
 }
 )
 
-// On scrolling down to bottom:
+
+
+
+// On scrolling down to bottom: TODO:
 // https://stackoverflow.com/questions/3898130/check-if-a-user-has-scrolled-to-the-bottom
 // Temporarily disable the event:
 // https://stackoverflow.com/questions/1263042/how-to-temporarily-disable-a-click-handler-in-jquery
-var NEAR_BOTTOM = 10;
-var SCROLL_FLAG = 0;
-$(window).scroll(async function () {
- if (
-  $(window).scrollTop() + $(window).height() > $(document).height() - NEAR_BOTTOM
-  &&
-  SCROLL_FLAG == 0
- ) {
-  SCROLL_FLAG = 1;
-  buffer_expand(local_buffer, option);
-  SCROLL_FLAG = 0;
- }
-});
+// var NEAR_BOTTOM = 10;
+// var SCROLL_FLAG = 0;
+// $(window).scroll(async function () {
+//  if (
+//   $(window).scrollTop() + $(window).height() > $(document).height() - NEAR_BOTTOM
+//   &&
+//   SCROLL_FLAG == 0
+//  ) {
+//   SCROLL_FLAG = 1;
+//   buffer_expand(local_buffer, option);
+//   SCROLL_FLAG = 0;
+//  }
+// });
 
 
 // Sleep:
@@ -51,9 +55,36 @@ function sleep(ms) {
  *  2. self events
  *  3. friends events 
  */
+
+// Buffer nearby
 function buffer_nearby() {
  window.navigator.geolocation.getCurrentPosition(success, error);
 };
+
+// Buffer based on category
+function buffer_category(option) {
+ if (option == "这里") {
+  buffer_nearby();
+ } else {
+  $.ajax({
+   url: "/map/others",
+   method: 'POST',
+   dataType: 'json', // Assign json will automatically parse json response.
+   data: JSON.stringify({
+    'this_position': current_position
+   }),
+   success: function (events) {
+    if (events == null || events.length == 0) {
+     // no events
+     local_buffer[option].clear();
+    } else {
+     local_buffer[option].clear();
+     local_buffer[option].extend(events);
+    }
+   },
+  });
+ }
+}
 
 
 /** Expand the buffer on sepecific category 
@@ -89,10 +120,11 @@ function buffer_center_nearby(current_position) {
   }),
   success: function (events) {
    if (events == null || events.length == 0) {
-    // no events? TODO:
-    // local_buffer.clear();
+    // no events
+    local_buffer["这里"].clear();
    } else {
-    // local_buffer.update(events); // TODO:
+    local_buffer["这里"].clear();
+    local_buffer["这里"].extend(events);
    }
   },
  });

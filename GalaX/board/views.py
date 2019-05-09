@@ -14,18 +14,27 @@ from django.shortcuts import render
 def index(request):
     return render(request, 'board/board_base.html')
 
+# login: 1; else: 0
+def is_login(request):
+    is_login = request.session.get('is_login', None)
+    if request.is_ajax() and is_login:
+        response = json.dumps({'login': 1})
+    else:
+        response = json.dumps({'login': 0})
+    return HttpResponse(response)
+
 
 def user_event_interactive(request, func, db):
     response = {}
     is_login = request.session.get('is_login', None)
-    if request.is_ajax() and is_login:
-        if request.method == 'POST':
-            data = json.loads(request.body)
-            data['user_id'] = request.session.get('user_id')
-            response['status'] = '0'
+    if request.is_ajax() and is_login and request.method == 'POST':
+        data = json.loads(request.body)
+        data['user_id'] = request.session.get('user_id')
+        response['status'] = '0'
     else:
         response['status'] = '1'
-        response['error'] = '用户未登录'
+        if not is_login:
+            response['error'] = '用户未登录'
         response = json.dumps(response)
         return HttpResponse(response)
 
@@ -63,10 +72,9 @@ def like_event(db, data, reponse):
         )
         new_like.save()
     elif flag == 0:
-        db.objects.filter(event__id=event_id, user__id = user_id).delete()
+        db.objects.filter(event__id=event_id, user__id=user_id).delete()
     else:
         raise ValueError("Flag value invalid.")
-
 
 
 # On event commenting request.
