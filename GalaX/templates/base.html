@@ -3,6 +3,23 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="zh-CN">
+<style type="text/css">
+  body {
+    padding-top: 60px;
+  }
+
+  @media (max-width: 979px) {
+    body {
+      padding-top: 0px;
+    }
+  }
+
+  .fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+</style>
 
 <head>
   <meta charset="utf-8">
@@ -13,10 +30,10 @@
 
   <!-- Bootstrap -->
   <link href="{% static 'bootstrap-4.3.1-dist/css/bootstrap.min.css' %}" rel="stylesheet">
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="{% static 'bootstrap-4.3.1-dist/js/bootstrap.min.js'%}"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="{% static 'bootstrap-4.3.1-dist/js/bootstrap.min.js'%}"></script>
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -26,16 +43,35 @@
   {% block css %}
   {% endblock %}
 </head>
-<!-- 引入导航 -->
-{% include 'nav.html' %}
-<!-- 引入内容 -->
-{% block content %}{% endblock %}
-<!-- 引入注脚 -->
-{% include 'footer.html' %}
 
-<!-- 引入脚本 -->
-{% block jsScript %}
-{% endblock %}
+<body>
+  {% include 'nav.html' %}
+  <!-- 引入内容 -->
+  {% block content %}{% endblock %}
+  <!-- 引入注脚 -->
+  {% include 'footer.html' %}
+  <!-- 引入脚本 -->
+  {% block jsScript %}
+  {% endblock %}
+  <!-- 页面大小 -->
+  <script>
+    $(function () {
+      function footerPosition() {
+        $("footer").removeClass("fixed-bottom");
+        var contentHeight = document.body.scrollHeight, //网页正文全文高度
+          winHeight = window.innerHeight; //可视窗口高度，不包括浏览器顶部工具栏
+        if (!(contentHeight > winHeight)) {
+          //当网页正文高度小于可视窗口高度时，为footer添加类fixed-bottom
+          $("footer").addClass("fixed-bottom");
+        } else {
+          $("footer").removeClass("fixed-bottom");
+        }
+      }
+      footerPosition();
+      $(window).resize(footerPosition);
+    });
+  </script>
+
 </body>
 
 </html>
