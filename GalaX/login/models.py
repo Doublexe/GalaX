@@ -26,6 +26,8 @@ class User(AbstractUser):
         ordering = ["-c_time"]
         verbose_name = "用户"
         verbose_name_plural = "用户"
+        
+
 
 class ConfirmString(models.Model):
     code = models.CharField(max_length=256)

@@ -110,4 +110,16 @@ This will not be escaped: <b>
 
 5.9
 1. pip install django-friendship,
+
 2. 
+
+
+5.11
+1. 上传头像完成。
+2. 已知user_information中profile_edit由于关闭了csrt存在安全隐患，现在先完成主题功能。
+```
+@csrf_exempt #This skips csrf validation. Use csrf_protect to have validation
+def profile_edit(request,id):
+```
+3. profile的修改、查看基本完成，只差朋友关系模型对这两个页面存在的一些修改。
+

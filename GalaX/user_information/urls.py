@@ -7,5 +7,5 @@ urlpatterns = [
     # 用户信息修改
     url('edit/(?P<id>[0-9]+)/', views.profile_edit, name='profile_edit'),
     # 用户信息查看
-    url('view/(?P<id>[0-9]+)/', views.profile_edit, name='profile_view'),
+    url('view/(?P<id>[0-9]+)/', views.profile_view, name='profile_view'),
 ]

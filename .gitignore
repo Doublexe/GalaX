@@ -10,4 +10,5 @@ mysite/__pycache__/
 .gitignore
 GalaX/GalaX/__pycache__/
 __pycache__/
+GalaX/user_information/migrations/
 

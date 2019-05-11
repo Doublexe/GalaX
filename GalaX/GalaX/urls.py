@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from login import views
+from django.conf import settings
+from django.conf.urls.static import static
 '''Cause these six functions are mainly part so in whole urls,if not right,change it.'''
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -38,3 +40,4 @@ urlpatterns = [
     
     url(r'^friendship/', include('friendship.urls')),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

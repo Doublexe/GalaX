@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} 用户信息修改 {% endblock title %}
+
+
+{% if request.session.is_login %}
+{% block content %}
+{% endblock %}
+{% else %}
+<body style="background-image: url({% static 'image/galax8.jpg' %});background-size:100%;">
+    <div class="row">
+        <center></center><h1 class="text-center" style="color:rgb(3, 2, 0)">您还没有登陆，不能访问此内容</h1> 
+        <br><a href="/login/">如果长时间没有跳转，可以点此跳转</a></center>
+    </div>
+    <script>
+        window.setTimeout("window.location='/login/'",4000);
+    </script>
+{% endif %}
+
+

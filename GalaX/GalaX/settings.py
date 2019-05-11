@@ -201,7 +201,7 @@ CAPTCHA_LENGTH = '4'
 AUTH_USER_MODEL = 'login.User'
 
 # 文件上传地址
-MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload').replace('\\','/')
 MEDIA_URL = '/upload/' #这个是在浏览器上访问该上传文件的url的前缀
 
 # Default login url
