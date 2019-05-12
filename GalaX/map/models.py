@@ -22,8 +22,6 @@ class Event(models.Model):
 
     # Function
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.Field.null
-    repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
         return self.name + '_' + str(self.id)
@@ -32,6 +30,24 @@ class Event(models.Model):
         ordering = ["-c_time"]
         verbose_name = "事件"
         verbose_name_plural = "事件"
+
+
+class Repost(models.Model):
+    id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.Field.null
+    repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True)
+    comment = models.CharField(max_length=2000)
+
+    c_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.onwer + '_repost' + str(self.repost.id)
+
+    class Meta:
+        ordering = ["-c_time"]
+        verbose_name = "转发"
+        verbose_name_plural = "转发"
 
 
 class Like(models.Model):

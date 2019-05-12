@@ -1,34 +1,49 @@
 import {
- current_info_event, 
- render_info, 
- render_resized_image_on_canvas,
- generate_imagesrc_from_base64,
- generate_base64_from_imagesrc
+    current_info_event,
+    render_info,
+    render_resized_image_on_canvas,
+    generate_imagesrc_from_base64,
+    generate_base64_from_imagesrc
 } from './render.js';
 
-import {render_nearby, current_position, render_center_nearby} from './on_refresh.js';
+import { render_nearby, current_position, render_center_nearby } from './on_refresh.js';
 import { map } from './baidu_map/generation.js';
 import { addCandidateMarker, map_anchor, jump_all, sleep } from './utils.js';
 
 /** This module contains functionalities for map nav bar */
 
 /** On search: display all matched events */
-function map_search () {};
+function map_search() { };
 
 
 /** On click: render and anchor the specific event */
-function map_choose () {};
+function map_choose() { };
 
 
 /** Given name string, from server get matched events */
-function match_name (name) {};
+function match_name(name) { };
 
+/** Check if login. If so, do the func. Else alert. */
+function on_login(func) {
+    $.ajax({
+        url: "/board/is_login",
+        method: 'GET',
+        dataType: 'json', // Assign json will automatically parse json response.
+        success: function (msg) {
+            if (msg.login == 1) {
+                func();
+            } else {
+                alert("请先登录");
+            }
+        },
+    });
+}
 
 var DEFAULT_ZOOM = 15;
 // On refresh button, load nearby events data and anchor this position.
 document.getElementById('map_relocate').addEventListener(
     'click',
-    ()=>{
+    () => {
         render_nearby();
         map.setZoom(DEFAULT_ZOOM);
     },
@@ -38,14 +53,14 @@ document.getElementById('map_relocate').addEventListener(
 
 /** Add an event: map_add_event is the button */
 document.getElementById('map_add_event').addEventListener(
- 'click',
- add_event,
- false
+    'click',
+    add_event,
+    false
 );
 
 
 /** Default image for add_event_image_canvas */
-// TODO: blury: https://stackoverflow.com/questions/15661339/how-do-i-fix-blurry-text-in-my-html5-canvas
+// TODO: font blury: https://stackoverflow.com/questions/15661339/how-do-i-fix-blurry-text-in-my-html5-canvas
 var default_add_event_image = () => {
     var canvas = document.getElementById("add_event_image_canvas");
     var context = canvas.getContext("2d");
@@ -53,7 +68,7 @@ var default_add_event_image = () => {
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "grey";
     context.font = "bold 16px SimHei";
-    context.fillText("点击加入图片", (canvas.width / 2)-50, (canvas.height / 2) + 8);
+    context.fillText("点击加入图片", (canvas.width / 2) - 50, (canvas.height / 2) + 8);
 };
 default_add_event_image();
 
@@ -68,15 +83,15 @@ default_add_event_image();
 var DEFAULT_MARKER_ID = 0;
 var add_event_candidate_marker;
 function add_event() {
- $('#add_event_info').css({'visibility': 'visible'});
- if (add_event_candidate_marker==undefined) {
-    add_event_candidate_marker =
-     addCandidateMarker(current_position.lng, current_position.lat, DEFAULT_MARKER_ID);
- } else {
-    add_event_candidate_marker.show();
-    add_event_candidate_marker.enableDragging();
-    map_anchor(add_event_candidate_marker.lng, add_event_candidate_marker.lat);
- }
+    $('#add_event_info').css({ 'visibility': 'visible' });
+    if (add_event_candidate_marker == undefined) {
+        add_event_candidate_marker =
+            addCandidateMarker(current_position.lng, current_position.lat, DEFAULT_MARKER_ID);
+    } else {
+        add_event_candidate_marker.show();
+        add_event_candidate_marker.enableDragging();
+        map_anchor(add_event_candidate_marker.lng, add_event_candidate_marker.lat);
+    }
 };
 
 
@@ -94,17 +109,17 @@ function handleImage(e) {
     reader.readAsDataURL(e.target.files[0]); // parameter is the "input"
 
     reader.onload = function (input) {
-     render_resized_image_on_canvas('add_event_image_canvas',input.target.result);
-     add_event_imagesrc_file = input.target.result;
+        render_resized_image_on_canvas('add_event_image_canvas', input.target.result);
+        add_event_imagesrc_file = input.target.result;
     };
 
-    reader.onloadend = function() {
-        if (reader.error!=null){
+    reader.onloadend = function () {
+        if (reader.error != null) {
             alert(reader.error.message);
-        }   
+        }
     };
 }
-document.getElementById('add_event_image').onclick = ()=>{
+document.getElementById('add_event_image').onclick = () => {
     document.getElementById('filePhoto').click();
 };
 // Edit for multiple images
@@ -112,7 +127,7 @@ document.getElementById('add_event_image').onclick = ()=>{
 // Also you need write some CSS code to see all images in container properly.
 function handleImages(e) {
     $('.uploader img').remove();
-    for(var i = 0; i < e.target.files.length; i++){
+    for (var i = 0; i < e.target.files.length; i++) {
         var reader = new FileReader();
         reader.onload = function (input) {
             var $img = $('<img/>');
@@ -134,8 +149,8 @@ document.getElementById('add_event_info_cancel').addEventListener(
 // Hide the sumbit (add event). Don't clear the contents. 
 document.getElementById('add_event_info_hide').addEventListener(
     'click',
-    ()=>{
-        $('#add_event_info').css({'visibility': 'hidden'});
+    () => {
+        $('#add_event_info').css({ 'visibility': 'hidden' });
         add_event_candidate_marker.hide();
     },
     false
@@ -149,8 +164,8 @@ function cancel_event() {
     };
 };
 
-function silent_cancel_event () {
-    $('#add_event_info').css({'visibility': 'hidden'});
+function silent_cancel_event() {
+    $('#add_event_info').css({ 'visibility': 'hidden' });
     default_add_event_image();
     add_event_imagesrc_file = DEFAULT_IMAGESRC;
     $('#add_event_summary_file').val('');
@@ -163,7 +178,7 @@ function silent_cancel_event () {
 // Complete the submit.
 document.getElementById('add_event_info_submit').addEventListener(
     'click',
-    submit_event,
+    () => { on_login(submit_event) },
     false
 )
 
@@ -174,7 +189,7 @@ function submit_event() {
     if (!checked) {
         alert('请完整填写信息');
     }
-    if (r&&checked) {
+    if (r && checked) {
         $.ajax({
             url: "/map/upload",
             method: 'POST',
@@ -190,13 +205,13 @@ function submit_event() {
                 }
             }),
             success: function (msg) {
-                if (msg.status==1) {
+                if (msg.status == 1) {
                     alert('提交失败.');
                 } else {
                     alert('提交成功');
-                    render_center_nearby(add_event_candidate_marker.lng,add_event_candidate_marker.lat);
+                    render_center_nearby(add_event_candidate_marker.lng, add_event_candidate_marker.lat);
                     sleep(200);
-                    map_anchor(add_event_candidate_marker.lng,add_event_candidate_marker.lat);
+                    map_anchor(add_event_candidate_marker.lng, add_event_candidate_marker.lat);
                     silent_cancel_event();
                     jump_all();
                 }
@@ -216,24 +231,24 @@ function submit_event() {
 function check_sumbit() {
     var result = true;
     if (
-        add_event_candidate_marker==undefined 
-        || 
-        add_event_imagesrc_file==undefined
+        add_event_candidate_marker == undefined
+        ||
+        add_event_imagesrc_file == undefined
         ||
         bad_textarea_by_id('add_event_summary_file')
         ||
         bad_textarea_by_id('add_event_content_file')
         ||
         bad_textarea_by_id('add_event_name_file')
-        ) {
+    ) {
         result = false;
     }
     return result;
 };
 
 
-function bad_textarea_by_id (textarea_id) {
-    if ($.trim($('#'+textarea_id).val()) == "") {
+function bad_textarea_by_id(textarea_id) {
+    if ($.trim($('#' + textarea_id).val()) == "") {
         return true;
     } else {
         return false;

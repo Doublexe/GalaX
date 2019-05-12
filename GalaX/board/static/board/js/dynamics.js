@@ -4,19 +4,20 @@ var $grid = $('.grid').masonry({
  itemSelector: '.grid-item',
 });
 
+
 /** General ------------------------------------------------------------------------- */
 /** Hover styled control bar */
-$('.grid-content').mouseover( function () {
+$(document).on('mouseover', '.grid-content', function () {
  $( this ).find('.card-hide').css('visibility','visible');
  $( this ).find('.card-hide').css('opacity', 1);
 });
-$('.grid-content').mouseout( function () {
+$(document).on('mouseout', '.grid-content', function () {
  $( this ).find('.card-hide').css('visibility','hidden');
  $( this ).find('.card-hide').css('opacity', 0);
 });
 
 
-$('.grid-expand').on( 'click', function() {
+$(document).on( 'click', '.grid-expand', function() {
  // change size of item via class
  var $grid_content = $( this ).parents('.grid-content');
  $grid_content.find('.event-usual-hide').toggleClass('grid-dynamic-show');
@@ -30,14 +31,14 @@ $('.grid-expand').on( 'click', function() {
 
 /** Event card ---------------------------------------------------------------------- */
 /** Expansion */
-$('.grid-expand.event-card').on( 'click', function() {
+$(document).on( 'click', '.grid-expand.event-card', function() {
  var $grid_content = $( this ).parents('.grid-content');
  $grid_content.find('.event-content-hide').toggleClass('grid-dynamic-show');
  $grid_content.find('.grid-comment-hide').toggleClass('grid-dynamic-show');
 });
 
 /** Comment */
-$('.grid-comment-hide').on( 'click', function() {
+$(document).on( 'click', '.grid-comment-hide', function() {
  // change size of item via class
  var $grid_content = $( this ).parent().parent('.grid-content');
  $grid_content.find('.event-comment-hide').toggleClass('grid-dynamic-show');
@@ -55,16 +56,13 @@ $('.grid-comment-hide').on( 'click', function() {
 
 /** Function card ---------------------------------------------------------------------- */
 /** Expand */ 
-$('.grid-expand-function').on( 'click', function() {
+$(document).on( 'click', '.grid-expand-function', function() {
  // change size of item via class
  var $grid_content = $( this ).parents('.grid-content');
  $grid_content.find('.event-usual-hide').toggleClass('grid-dynamic-show');
  // trigger layout
  $grid.masonry();
 });
-
-
-
 
 
 export {$grid};

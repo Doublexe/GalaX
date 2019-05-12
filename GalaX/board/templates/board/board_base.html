@@ -12,6 +12,7 @@
 
     <!-- general css -->
     <link rel="stylesheet" type="text/css" href="{% static 'map/css/my_card.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'contextmenu\jquery.contextMenu.min.css' %}">
 
     <!-- Fontawesome -->
     <script defer src="{% static 'fontawesome-free-5.8.1-web/js/all.min.js' %}"></script>
@@ -44,8 +45,10 @@
     
 </div>
 
-<!-- Masonary -->
+<!-- Masonary and contextmenu -->
 <script type="module" src="{% static 'js/masonry.js'%}"></script>
+<script type="module" src="{% static 'contextmenu\jquery.contextMenu.min.js'%}"></script>
+
 <!-- board block dynamic -->
 <script type="module" src="{% static 'board/js/dynamics.js'%}"></script>
 <script type="module" src="{% static 'board/js/functions.js'%}"></script>

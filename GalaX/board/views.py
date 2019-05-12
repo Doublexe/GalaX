@@ -2,7 +2,7 @@ import base64
 from django.views.decorators.csrf import csrf_exempt
 import json
 from login.models import User
-from map.models import Like, Event, Comment
+from map.models import Like, Event, Comment, Repost
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -62,16 +62,16 @@ def like(request):
 
 # Unlike or like an event
 def like_event(db, data, reponse):
-    flag = data.get('flag')
+    like = data.get('like')
     event_id = data.get('event_id')
     user_id = data.get('user_id')
-    if flag == 1:
+    if like == 1:
         new_like = db(
             event__id=event_id,
             user__id=user_id,
         )
         new_like.save()
-    elif flag == 0:
+    elif like == 0:
         db.objects.filter(event__id=event_id, user__id=user_id).delete()
     else:
         raise ValueError("Flag value invalid.")
@@ -109,7 +109,7 @@ def comment_event(db, data, response):
 
 @csrf_exempt
 def repost(request):
-    return user_event_interactive(request, repost_event, Event)
+    return user_event_interactive(request, repost_event, Repost)
 
 
 def repost_event(db, data, response):
@@ -118,7 +118,7 @@ def repost_event(db, data, response):
     comment = data.get('comment')
     new_repost = db(
         event__id=event_id,
-        user__id=user_id,
+        owner__id=user_id,
         comment=comment
     )
     new_repost.save()

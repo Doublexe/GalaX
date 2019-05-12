@@ -1,13 +1,12 @@
 import sys
 import os
-from os.path import dirname
-sys.path.extend([x[0] for x in os.walk(dirname(dirname(__file__)))])
 
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.utils import IntegrityError
 
-from map.models import Event
+from map.models import Event, Like
 import json
 from django.views.decorators.csrf import csrf_exempt
 import base64
@@ -39,7 +38,8 @@ def nearby(request):
     
     # Format nearby events. Send JSON. 
     # If empty nearbys, return an empty json array.
-    response = [format_event(nearby) for nearby in nearbys]
+    user_id = request.session.get('user_id', None)
+    response = [format_event(nearby, user_id) for nearby in nearbys]
     response = json.dumps(response)
 
     return HttpResponse(response)
@@ -53,7 +53,8 @@ def nearby(request):
 @csrf_exempt
 def upload(request):
     response = {}
-    if request.is_ajax():
+    is_login = request.session.get('is_login', None)
+    if request.is_ajax() and is_login:
         if request.method == 'POST':
             event = json.loads(request.body).get('event')
             response['status'] = '0'
@@ -63,7 +64,11 @@ def upload(request):
         return HttpResponse(response)
     
     # If request valid, add the event
-    add_event(Event, event)
+    user_id = request.session.get('user_id', None)
+    try:
+        add_event(Event, event, user_id)
+    except IntegrityError:
+        response['status'] = '1'
 
     response = json.dumps(response)
     return HttpResponse(response)
@@ -77,26 +82,45 @@ def get_position_range(lng, lat):
 
 
 # Given an event object, return the dict format (ready for JSON)
-def format_event(event):
+def format_event(event, user_id):
+    owner = event.owner
+    likes = Like.objects.filter(event__id = event.id).count()
+    # profile = owner.profile
+    if owner.id == user_id:
+        type_ = 'self'
+    else:
+        type_ = 'none'
     return \
     {
         'id': str(event.id),
+        'type': type_,
         'lng': str(event.lng),  # json needs utf-8
         'lat': str(event.lat),  
         'summary': event.summary,
         'content': event.content,
         'name': event.name,
+        'likes': likes,
+        'mode': 'normal',
         # base64: https://stackoverflow.com/questions/3715493/encoding-an-image-file-with-base64
         'imagebase64': base64.b64encode(event.image.read()).decode('utf-8'),  # json needs utf-8
+        #'profilebase64': base64.b64encode(profile.avatar.read()).decode('utf-8'),
+        'profilebase64':'', #TODO:
+        'ownername': owner.username,
+        'owner_id': owner.id,
     }
 
 
 # Given a range and DB, return the nearby events
 def get_nearby_events(db, low_lng, high_lng, low_lat, high_lat):
-    return db.objects.filter(lng__range=(low_lng, high_lng)).filter(lat__range=(low_lat, high_lat))  # Get nearby
+    # Get nearby
+    return \
+    db.objects \
+    .filter(lng__range=(low_lng, high_lng)) \
+    .filter(lat__range=(low_lat, high_lat)) \
+    .select_related()
 
 
-def add_event(db,event):
+def add_event(db,event,user_id):
     image_type = event['imagebase64_and_type']['type']
     new_event = db(
         name = event['name'],
@@ -107,7 +131,8 @@ def add_event(db,event):
         summary = event['summary'],
         content = event['content'],
         lng = event['lng'],
-        lat = event['lat']
+        lat = event['lat'],
+        owner_id = user_id
     )
     new_event.save()
 

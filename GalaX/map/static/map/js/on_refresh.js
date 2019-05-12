@@ -27,6 +27,7 @@ function render_center_nearby (position) {
             if (events == null || events.length == 0) {  
                 clear_recom();
                 map.clearOverlays();
+                alert("附近没有活动");
             } else {
                 render_example_to_info(events);
                 clear_recom();

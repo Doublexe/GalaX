@@ -1,12 +1,113 @@
-import { local_buffer, render } from './render.js';
+import { render } from './render.js';
+import { EventCard } from "./cards.js";
+
+
+// Galaxy: a card pool (EventCard)
+class Galaxy {
+ constructor() {
+  this.stars = [];
+ }
+
+ clear() {
+  for (var i = 0; i < this.stars.length; i++) {
+   this.stars[i].remove();
+  }
+  this.stars = [];
+ }
+
+ extend(events) {
+  // JS this != Python self
+  var stars = this.stars;
+  events.forEach(
+   function (item, index) {
+    stars.push(new EventCard(item));
+   }
+  );
+ }
+
+ append(event) {
+  this.stars.push(new EventCard(event));
+ }
+};
+var galaxy = new Galaxy();
+
+
+// A buffer utility
+class Buffer {
+ constructor(category) {
+  this.category = category;
+  this.events = new Array();
+ }
+
+ clear() {
+  this.events = new Array();
+ }
+
+ extend(events) {
+  this.events.push(...events);
+ }
+
+ append(event) {
+  this.events.push(event);
+ }
+
+ // find and return an event (else null). If normal mode, don't find repost
+ find(event_id, mode) {
+  if (mode=='normal') {
+   this.events.forEach(
+    function (item,index) {
+     if (item.mode == 'normal' && item.id==event_id) {
+      return item;
+     }
+    }
+   )
+  }
+  return null;
+ }
+
+}
+
+/** Local buffer for events ready to be rendered.
+ * 
+ * Event based on:
+ * 1. geographical position
+ * 2. recommendation
+ * 3. friends (original / repost)
+ * 4. self
+ * 
+ * Method:
+ * 1. update(category, events)
+ * 2. drop(event)
+ * 3. get(category)
+ * 
+ * 
+ * Implementation:
+ * 1. auto-limited size
+ */
+var local_buffer = {
+ '这里': new Buffer('nearby'),
+ '热点': new Buffer('recom'),
+ '朋友': new Buffer('friend'),
+ '自己': new Buffer('self'),
+ names: ['这里', '热点', '朋友', '自己'],
+ find_event: function (event_id) {
+  var buffers = this;
+  names.forEach(
+   function (item, index) {
+    var buffer = buffers[item];
+    var event = buffer.find(event_id, 'normal');
+    if (event!=null) {return event;}
+   }
+  )
+  return event;
+ }
+};
 
 
 // On document refresh, load nearby events data.
 $(document).ready(
  () => {
-  buffer_nearby();
-  var option = $("#event-filter option:selected").text();
-  render(local_buffer, option);
+  render_nearby();
  }
 );
 
@@ -15,7 +116,7 @@ $(document).ready(
 $("#event-filter").change(function () {
  var option = $("#event-filter option:selected").text();
  buffer_category(option);
- render(local_buffer, option);
+ render(galaxy, local_buffer, option);
 }
 )
 
@@ -57,7 +158,7 @@ function sleep(ms) {
  */
 
 // Buffer nearby
-function buffer_nearby() {
+function render_nearby() {
  window.navigator.geolocation.getCurrentPosition(success, error);
 };
 
@@ -118,10 +219,14 @@ function buffer_center_nearby(current_position) {
   data: JSON.stringify({
    'this_position': current_position
   }),
+  async: false,
+  // The scope of success is viscious: https://blog.csdn.net/zxstone/article/details/7297284
+  // TODO: VERY IMPORTANT
   success: function (events) {
    if (events == null || events.length == 0) {
     // no events
     local_buffer["这里"].clear();
+    alert("附近没有活动");
    } else {
     local_buffer["这里"].clear();
     local_buffer["这里"].extend(events);
@@ -151,6 +256,8 @@ function success(position) {
  // console.log(longitude);
  // Ajax GET request. Get nearby events
  buffer_center_nearby(current_position);
+ var option = $("#event-filter option:selected").text();
+ render(galaxy, local_buffer, option);
 };
 
 
@@ -158,3 +265,6 @@ function success(position) {
 function error(msg) {
  alert("获取您的地理信息失败");
 };
+
+
+export { local_buffer, galaxy };
