@@ -41,14 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'map',
     'board',
-    'user_information.apps.UserInformationConfig',
+    'user_information',
     'login',
     'captcha',
-    'friendship',
+    
+    'django.contrib.sites',
+    'actstream',
 
 ]
 #添加sites的应用并设置当前django工程的站点id=1
-#SITE_ID = 1
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -206,3 +208,12 @@ MEDIA_URL = '/upload/' #这个是在浏览器上访问该上传文件的url的�
 
 # Default login url
 LOGIN_URL = reverse_lazy('login')
+
+# settings.py
+ACTSTREAM_SETTINGS = {
+    'MANAGER': 'actstream.managers.ActionManager',
+    'FETCH_RELATIONS': True,
+
+    'USE_JSONFIELD': True,
+
+}

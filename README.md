@@ -76,6 +76,7 @@ safe是safe from further escaping或者can be safely interpreted as HTML的缩�
 This will be escaped: &lt;b&gt;
 This will not be escaped: <b>
 ```
+
 4.17
 
 1. 事件（Event）model创建完成，相应url访问api初步形成
@@ -122,4 +123,13 @@ This will not be escaped: <b>
 def profile_edit(request,id):
 ```
 3. profile的修改、查看基本完成，只差朋友关系模型对这两个页面存在的一些修改。
+
+5.12
+1. 删除django-friendship，添加django-activity-stream
+2. pip install django-jsonfield
+3. pip install django-jsonfield-compat
+
+5.15
+1. 个人信息界面基本完成，差交互内容。
+2. 朋友关系完成。
 

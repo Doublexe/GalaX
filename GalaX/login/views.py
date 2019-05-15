@@ -10,7 +10,9 @@ from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
 from django.utils import timezone
 from django.core.urlresolvers import reverse
-
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as login_django
+from django.contrib.auth import logout as  logout_django
 def hash_code(s, salt='mysite'):# 加点盐
     h = hashlib.sha256()
     s += salt
@@ -82,6 +84,7 @@ def login(request):
                     request.session['is_login'] = True
                     request.session['user_id'] = user.id
                     request.session['user_name'] = user.username
+                    login_django(request, user)
                     return redirect('/index/')
                 else:
                     message = "密码不正确！"
@@ -132,7 +135,6 @@ def register(request):
                 new_user.phone_number = phone_number
                 new_user.sex = sex
                 new_user.save()
-
                 code = make_confirm_string(new_user)
                 send_email(email, code,function_code='register')
 
@@ -149,6 +151,7 @@ def logout(request):
         # 如果本来就未登录，也就没有登出一说
         return redirect("/index/")
     request.session.flush()
+    logout_django(request)
     # 或者使用下面的方法
     # del request.session['is_login']
     # del request.session['user_id']

@@ -17,10 +17,11 @@ class ProfileForm(forms.Form):
     wechat=forms.CharField(max_length=20, label="wechat", required=False,error_messages={'max_length': "输入过多字符！"}, widget=forms.TextInput(attrs={'class': 'form-control'}))
     # QQ
     QQ=forms.IntegerField(max_value=999999999999, label="QQ", required=False,error_messages={'max_value': "QQ号码过长！"}, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # 一句话简介
+    biography = forms.CharField(max_length=20, label="个性签名", required=False,error_messages={'max_length': "输入过多字符！"}, widget=forms.TextInput(attrs={'class': 'form-control'}))
     # 个人简介
     bio = forms.CharField(max_length=500, label="个人简介", required=False,error_messages={'max_length': "输入过多字符！"}, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # 一句话简介
-    biography = forms.CharField(max_length=20, label="个人简介", required=False,error_messages={'max_length': "输入过多字符！"}, widget=forms.TextInput(attrs={'class': 'form-control'}))
+
 
 """
 
