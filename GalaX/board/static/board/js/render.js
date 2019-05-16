@@ -13,6 +13,7 @@ function on_login(func, para) {
  $.ajax({
   url: "/board/is_login",
   method: 'GET',
+  async: false,
   dataType: 'json', // Assign json will automatically parse json response.
   success: function (msg) {
    if (msg.login == 1) {

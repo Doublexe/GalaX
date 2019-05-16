@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.utils import IntegrityError
 
-from map.models import Event, Like
+from map.models import Event, Like, Comment
 import json
 from django.views.decorators.csrf import csrf_exempt
 import base64
@@ -81,33 +81,96 @@ def get_position_range(lng, lat):
     return lng - RADIUS, lng + RADIUS, lat - RADIUS, lat + RADIUS
 
 
-# Given an event object, return the dict format (ready for JSON)
+# Given an event object and current user, return the dict format (ready for JSON)
+# TODO: repost
 def format_event(event, user_id):
     owner = event.owner
-    likes = Like.objects.filter(event__id = event.id).count()
-    # profile = owner.profile
-    if owner.id == user_id:
+    profile = owner.profile
+    liked, num_likes = is_like_event(event, user_id)
+
+    mode = is_repost(event)
+    
+    if mode == 'repost':
+        repost = event
+        event = repost.repost
+        reposter = repost.owner
+        owner = event.owner
+        profile = reposter.profile
+
+        profilebase64 = get_profilebase64(profile)
+
+        return \
+        {
+            'id': str(repost.id),
+            'type': get_icon_type(reposter.id, user_id), # icon_type
+            'likes': num_likes,
+            'liked': liked,
+            'mode': mode, # if is repost
+            'repost_comment': 
+                [{
+                    'commentername': owner.username,
+                    'commenter_id': owner.id,
+                    'commenter_comment': repost.repostcomment,
+                    'commenter_profilebase64': get_profilebase64(owner.profile)
+                }],
+            'comments': get_comments(repost),
+            'ownername': owner.username,
+            'owner_id': owner.id,
+            'repostername': reposter.username,
+            'reposter_id': reposter.id,
+            'repost_from': format_event(event, user_id),
+            'reposter_profilebase64': profilebase64
+        }
+
+    elif mode == 'normal':
+
+        profilebase64 = get_profilebase64(profile)
+
+        return \
+        {
+            'id': str(event.id),
+            'type': get_icon_type(owner.id, user_id), # icon_type
+            'lng': str(event.lng),  # json needs utf-8
+            'lat': str(event.lat),  
+            'summary': event.summary,
+            'content': event.content,
+            'name': event.name,
+            'likes': num_likes,
+            'liked': liked,
+            'mode': mode, # if is repost
+            # base64: https://stackoverflow.com/questions/3715493/encoding-an-image-file-with-base64
+            'imagebase64': base64.b64encode(event.image.read()).decode('utf-8'),  # json needs utf-8
+            'profilebase64': profilebase64,
+            'ownername': owner.username,
+            'owner_id': owner.id,
+            'comments': get_comments(event)
+        }
+    else:
+        raise ValueError("Mode of the event invalid.")
+
+
+# Get is_liked_by_this_user, number of likes
+def is_like_event(event, user_id):
+    num_likes = Like.objects.filter(event__id = event.id).count()
+    liked_by_this_user_query = Like.objects.filter(event__id = event.id, user__id = user_id)
+    if not liked_by_this_user_query:
+        liked = False
+    else:
+        liked = True
+    return liked, num_likes
+
+def get_icon_type(owner_id, user_id):
+    if owner_id == user_id:
         type_ = 'self'
     else:
         type_ = 'none'
-    return \
-    {
-        'id': str(event.id),
-        'type': type_,
-        'lng': str(event.lng),  # json needs utf-8
-        'lat': str(event.lat),  
-        'summary': event.summary,
-        'content': event.content,
-        'name': event.name,
-        'likes': likes,
-        'mode': 'normal',
-        # base64: https://stackoverflow.com/questions/3715493/encoding-an-image-file-with-base64
-        'imagebase64': base64.b64encode(event.image.read()).decode('utf-8'),  # json needs utf-8
-        #'profilebase64': base64.b64encode(profile.avatar.read()).decode('utf-8'),
-        'profilebase64':'', #TODO:
-        'ownername': owner.username,
-        'owner_id': owner.id,
-    }
+    return type_
+
+def is_repost(event):
+    if not event.repost:
+        return 'normal'
+    else:
+        return 'repost'
 
 
 # Given a range and DB, return the nearby events
@@ -116,8 +179,7 @@ def get_nearby_events(db, low_lng, high_lng, low_lat, high_lat):
     return \
     db.objects \
     .filter(lng__range=(low_lng, high_lng)) \
-    .filter(lat__range=(low_lat, high_lat)) \
-    .select_related()
+    .filter(lat__range=(low_lat, high_lat))
 
 
 def add_event(db,event,user_id):
@@ -136,3 +198,27 @@ def add_event(db,event,user_id):
     )
     new_event.save()
 
+
+# If profile has avatar, return base64. Else return null.
+def get_profilebase64(profile):
+    try:
+        return base64.b64encode(profile.avatar.read()).decode('utf-8')
+    except:
+        return ''
+
+
+# Given the event obj, get and format the comments.
+def get_comments(event):
+    comments = Comment.objects.filter(event__id = event.id)
+    formatted = []
+    for comment in comments:
+        commenter = comment.user
+        formatted.append(
+            {
+                'commentername': commenter.username,
+                'commenter_id': commenter.id,
+                'commenter_comment': comment.comment,
+                'commenter_profilebase64': get_profilebase64(commenter.profile)
+            }
+        )
+    return formatted

@@ -1,18 +1,20 @@
-import { render } from './render.js';
-import { EventCard } from "./cards.js";
+import { render, on_login } from './render.js';
+import { get_card } from "./cards.js";
+import { $grid } from './dynamics.js';
 
 
-// Galaxy: a card pool (EventCard)
+// Galaxy: a card pool (EventCard / RepostCard ...)
 class Galaxy {
  constructor() {
   this.stars = [];
  }
 
  clear() {
-  for (var i = 0; i < this.stars.length; i++) {
-   this.stars[i].remove();
-  }
+  this.stars.forEach(function (item, index) {
+   item.remove();
+  })
   this.stars = [];
+  $grid.masonry();
  }
 
  extend(events) {
@@ -20,13 +22,15 @@ class Galaxy {
   var stars = this.stars;
   events.forEach(
    function (item, index) {
-    stars.push(new EventCard(item));
+    stars.push(get_card(item));
    }
   );
+  $grid.masonry();
  }
 
  append(event) {
-  this.stars.push(new EventCard(event));
+  this.stars.push(get_card(event));
+  $grid.masonry();
  }
 };
 var galaxy = new Galaxy();
@@ -53,10 +57,10 @@ class Buffer {
 
  // find and return an event (else null). If normal mode, don't find repost
  find(event_id, mode) {
-  if (mode=='normal') {
+  if (mode == 'normal') {
    this.events.forEach(
-    function (item,index) {
-     if (item.mode == 'normal' && item.id==event_id) {
+    function (item, index) {
+     if (item.mode == 'normal' && item.id == event_id) {
       return item;
      }
     }
@@ -92,11 +96,11 @@ var local_buffer = {
  names: ['这里', '热点', '朋友', '自己'],
  find_event: function (event_id) {
   var buffers = this;
-  names.forEach(
+  this.names.forEach(
    function (item, index) {
     var buffer = buffers[item];
     var event = buffer.find(event_id, 'normal');
-    if (event!=null) {return event;}
+    if (event != null) { return event; }
    }
   )
   return event;
@@ -106,17 +110,23 @@ var local_buffer = {
 
 // On document refresh, load nearby events data.
 $(document).ready(
- () => {
-  render_nearby();
- }
+ () => { init(); }
 );
+
+async function init() {
+ await buffer_render_nearby();
+ // console.log(galaxy.stars());
+}
 
 // On reselect filter, render.
 // Get selected content from <select>: https://stackoverflow.com/questions/1643227/get-selected-text-from-a-drop-down-list-select-box-using-jquery
 $("#event-filter").change(function () {
  var option = $("#event-filter option:selected").text();
- buffer_category(option);
- render(galaxy, local_buffer, option);
+ if (option == "这里") {
+  init();
+ } else {
+  on_login(buffer_render_category, option);
+ }
 }
 )
 
@@ -158,33 +168,34 @@ function sleep(ms) {
  */
 
 // Buffer nearby
-function render_nearby() {
- window.navigator.geolocation.getCurrentPosition(success, error);
+async function buffer_render_nearby() {
+ await window.navigator.geolocation.getCurrentPosition(success, error);
 };
 
 // Buffer based on category
-function buffer_category(option) {
- if (option == "这里") {
-  buffer_nearby();
- } else {
-  $.ajax({
-   url: "/map/others",
-   method: 'POST',
-   dataType: 'json', // Assign json will automatically parse json response.
-   data: JSON.stringify({
-    'this_position': current_position
-   }),
-   success: function (events) {
-    if (events == null || events.length == 0) {
-     // no events
-     local_buffer[option].clear();
-    } else {
-     local_buffer[option].clear();
-     local_buffer[option].extend(events);
-    }
-   },
-  });
- }
+async function buffer_render_category(option) {
+ $.ajax({
+  url: "/board/category",
+  method: 'POST',
+  async: false,
+  dataType: 'json', // Assign json will automatically parse json response.
+  data: JSON.stringify({
+   'option': option
+  }),
+  success: function (events) {
+   if (events == null || events.length == 0) {
+    // no events
+    galaxy.clear();
+    // local_buffer[option].clear();
+   } else {
+    // The order of galaxy and local_buffer can't be reversed.
+    galaxy.clear();
+    // local_buffer[option].clear();
+    // local_buffer[option].extend(events);
+    galaxy.extend(events);
+   }
+  },
+ });
 }
 
 
@@ -210,7 +221,7 @@ function buffer_expand(buffer, option) {
  * Return:
  *  modify local_buffer
  */
-function buffer_center_nearby(current_position) {
+function buffer_render_center_nearby(current_position) {
  // Ajax GET request. Get nearby events
  $.ajax({
   url: "/map/nearby",
@@ -225,11 +236,17 @@ function buffer_center_nearby(current_position) {
   success: function (events) {
    if (events == null || events.length == 0) {
     // no events
-    local_buffer["这里"].clear();
+    galaxy.clear();
+    // local_buffer["这里"].clear();
     alert("附近没有活动");
    } else {
-    local_buffer["这里"].clear();
-    local_buffer["这里"].extend(events);
+    console.log(galaxy.stars);
+    galaxy.clear();
+    console.log(galaxy.stars);
+    // local_buffer["这里"].clear();
+    // local_buffer["这里"].extend(events);
+    galaxy.extend(events);
+    console.log(galaxy.stars);
    }
   },
  });
@@ -255,9 +272,9 @@ function success(position) {
  // console.log(latitude);
  // console.log(longitude);
  // Ajax GET request. Get nearby events
- buffer_center_nearby(current_position);
- var option = $("#event-filter option:selected").text();
- render(galaxy, local_buffer, option);
+
+ buffer_render_center_nearby(current_position);
+
 };
 
 

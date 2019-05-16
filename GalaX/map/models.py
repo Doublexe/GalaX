@@ -1,6 +1,5 @@
 from django.db import models
 from django.dispatch import receiver
-
 from login.models import User
 
 
@@ -11,20 +10,26 @@ class Event(models.Model):
     name = models.CharField(max_length=50)
 
     # Content
-    image = models.ImageField()
+    image = models.ImageField(upload_to = "event_image/%Y%m%d/")
     summary = models.CharField(max_length=50)
     content = models.CharField(max_length=2000)
 
     # GEO
+    # CAUTION: db_index is required, or the saving fail!
     c_time = models.DateTimeField(auto_now_add=True)
     lng = models.DecimalField(db_index=True, max_digits=9, decimal_places=6)
     lat = models.DecimalField(db_index=True, max_digits=9, decimal_places=6)
 
-    # Function
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    # If Repost
+    # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.Field.null
+    repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True)
+    repostcomment = models.CharField(max_length=2000)
+     
 
     def __str__(self):
-        return self.name + '_' + str(self.id)
+        return self.name + '_to_' + str(self.repost)
 
     class Meta:
         ordering = ["-c_time"]
@@ -32,22 +37,22 @@ class Event(models.Model):
         verbose_name_plural = "事件"
 
 
-class Repost(models.Model):
-    id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.Field.null
-    repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True)
-    comment = models.CharField(max_length=2000)
+# class Repost(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+#     # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.Field.null
+#     repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True)
+#     comment = models.CharField(max_length=2000)
 
-    c_time = models.DateTimeField(auto_now_add=True)
+#     c_time = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.onwer + '_repost' + str(self.repost.id)
+#     def __str__(self):
+#         return self.onwer + '_repost' + str(self.repost.id)
 
-    class Meta:
-        ordering = ["-c_time"]
-        verbose_name = "转发"
-        verbose_name_plural = "转发"
+#     class Meta:
+#         ordering = ["-c_time"]
+#         verbose_name = "转发"
+#         verbose_name_plural = "转发"
 
 
 class Like(models.Model):
@@ -76,7 +81,7 @@ class Comment(models.Model):
     comment = models.CharField(max_length=2000)
 
     def __str__(self):
-        return str(self.user) + '_like_' + str(self.event)
+        return str(self.user) + '_comment_' + str(self.event)
 
     class Meta:
         ordering = ["-c_time"]

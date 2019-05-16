@@ -2,7 +2,8 @@ import base64
 from django.views.decorators.csrf import csrf_exempt
 import json
 from login.models import User
-from map.models import Like, Event, Comment, Repost
+from map.models import Like, Event, Comment
+from map.views import get_profilebase64, format_event
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -15,12 +16,32 @@ def index(request):
     return render(request, 'board/board_base.html')
 
 # login: 1; else: 0
+
+
 def is_login(request):
     is_login = request.session.get('is_login', None)
     if request.is_ajax() and is_login:
         response = json.dumps({'login': 1})
     else:
         response = json.dumps({'login': 0})
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def user_basic(request):
+    is_login = request.session.get('is_login', None)
+    if request.is_ajax() and is_login:
+        user_id = request.session.get('user_id')
+        user = User.objects.get(pk=user_id)
+        profile = user.profile
+        response = json.dumps({
+            'status': 0,
+            'profilebase64': get_profilebase64(profile),
+            'user_id': user.id,
+            'username': user.username
+        })
+    else:
+        response = json.dumps({'status': 1})
     return HttpResponse(response)
 
 
@@ -66,9 +87,12 @@ def like_event(db, data, reponse):
     event_id = data.get('event_id')
     user_id = data.get('user_id')
     if like == 1:
+        # If already liked, quit.
+        if (Like.objects.filter(event__id=event_id, user__id=user_id)): 
+            return
         new_like = db(
-            event__id=event_id,
-            user__id=user_id,
+            event_id=event_id,
+            user_id=user_id,
         )
         new_like.save()
     elif like == 0:
@@ -93,8 +117,8 @@ def comment_event(db, data, response):
     user_id = data.get('user_id')
     comment = data.get('comment')
     new_comment = db(
-        event__id=event_id,
-        user__id=user_id,
+        event_id=event_id,
+        user_id=user_id,
         comment=comment
     )
     new_comment.save()
@@ -105,20 +129,75 @@ def comment_event(db, data, response):
 # Required:
 #     request: {'event', 'user', 'comment'}
 
-# TODO: modify event foreign key
 
 @csrf_exempt
 def repost(request):
-    return user_event_interactive(request, repost_event, Repost)
+    return user_event_interactive(request, repost_event, Event)
 
 
 def repost_event(db, data, response):
     event_id = data.get('event_id')
+    owner_id = Event.objects.get(pk=event_id).owner.id
+    # owner_id = data.get('event_owner_id')
     user_id = data.get('user_id')
-    comment = data.get('comment')
+
+    # check self repost
+    if owner_id == user_id:
+        response['status'] = 1
+        response['error'] = 'Repost self is invalid.'
+        return
+
+    # check repost a repost (it should point to its parent event)
+    if db.objects.get(pk=event_id).repost is not None:
+        response['status'] = 1
+        response['error'] = 'Repost a repost is invalid.'
+        return
+
+    repostcomment = data.get('comment')
+
+    # lat, lng are db_index! must be given!
     new_repost = db(
-        event__id=event_id,
-        owner__id=user_id,
-        comment=comment
+        name='repost',
+        repost_id=event_id,
+        owner_id=user_id,
+        repostcomment=repostcomment,
+        lat=0.,
+        lng=0.
     )
+
     new_repost.save()
+
+
+
+@csrf_exempt
+def category(request):
+    response = {}
+    is_login = request.session.get('is_login', None)
+    if request.is_ajax() and is_login:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            option = data.get('option')
+            response['status'] = 0
+    else: 
+        response['status'] = 1
+        response = json.dumps(response)
+        return HttpResponse(response)
+    
+    user_id = request.session.get('user_id', None)
+    # depend on option, find corresponding events
+    if option == "自己":
+        events = Event.objects.filter(owner__id = user_id)
+        print(events)
+    # elif option == "朋友":
+    #     friends = User
+    # elif option == "热点":
+    else: 
+        raise ValueError("Option is invalid: "+option)
+
+
+    # Format events. Send JSON. 
+    # If empty events, return an empty json array.
+    response = [format_event(event, user_id) for event in events]
+    response = json.dumps(response)
+
+    return HttpResponse(response)

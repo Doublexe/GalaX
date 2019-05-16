@@ -24,18 +24,23 @@ function render_center_nearby (position) {
             'this_position': current_position
         }),
         success: function (events) {
-            if (events == null || events.length == 0) {  
+            var not_repost = [];
+            events.forEache( function (item, index) {
+                if (item.mode != 'repost') {
+                    not_repost.push(item)
+                }
+            }) // TODO: repost has no lng, lat. does this matter?
+            if (not_repost == null || not_repost.length == 0) {  
                 clear_recom();
                 map.clearOverlays();
                 alert("附近没有活动");
             } else {
-                render_example_to_info(events);
+                render_example_to_info(not_repost);
                 clear_recom();
                 map.clearOverlays();
-                render_recom(events); // these shouldn't be nearbys, but here assume nearby=recommend
-                mark_all(events);
+                render_recom(not_repost); // these shouldn't be nearbys, but here assume nearby=recommend
+                mark_all(not_repost);
                 jump_all();
-                console.log(current_position);
             }
         },
     });
