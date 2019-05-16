@@ -89,6 +89,7 @@
     .profile-work {
         padding: 14%;
         margin-top: -15%;
+        text-align: center;
     }
 
     .profile-work p {
@@ -102,7 +103,8 @@
         text-decoration: none;
         color: #495057;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 20px;
+
     }
 
     .profile-work ul {
@@ -117,223 +119,437 @@
         font-weight: 600;
         color: #0062cc;
     }
+
+    .dotline {
+        color: rgb(114, 110, 110);
+        BORDER-BOTTOM-STYLE: dotted;
+        BORDER-LEFT-STYLE: dotted;
+        BORDER-RIGHT-STYLE: dotted;
+        BORDER-TOP-STYLE: dotted
+    }
 </style>
 
 {% endblock %}
 
 {% block content %}
 <div class="container emp-profile">
-    <form method="post">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="profile-img">
-                        {% if profile.avatar %}
-                        <img src="{{ profile.avatar.url }}" class="avatar img-circle img-thumbnail" alt="avatar">
-                        {% else %}
-                        <img src="{% static 'image/avatar_2x.png' %}" class="avatar img-circle img-thumbnail" alt="avatar">
-                        {% endif %}
-                    <div class="btn-primary">
-                    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="profile-img">
+                {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" class="avatar img-circle img-thumbnail" alt="avatar">
+                {% else %}
+                <img src="{% static 'image/avatar_2x.png' %}" class="avatar img-circle img-thumbnail" alt="avatar">
+                {% endif %}
+                <div class="btn-primary">
                 </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="profile-head">
-                    <h5>
-                        {{user.username}}
-                    </h5>
-                    <h6>
-                        {{profile.job}}
-                    </h6>
-                    <h6>
-                        {{profile.biography}}
-                    </h6>
-                    <!--<p class="proile-rating">RANKINGS : <span>8/10</span></p>-->
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                                aria-controls="home" aria-selected="true">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                                aria-controls="profile" aria-selected="false">Timeline</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <a class="profile-edit-btn" name="btnAddMore"
-                    href="{% url 'profile_edit' id=request.session.user_id %}">Edit Profile</a>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                    <div class="col-md-5 profile-userbuttons">
-                            <button type="button" class="btn btn-success btn-sm">Follow</button>
-                        <!--   <button type="button" class="btn btn-danger btn-sm">Message</button>--> 
-                        </div>
-                <div class="profile-work">
-                    <p>WORK LINK</p>
-                    <a href="">Website Link</a><br />
-                    <a href="">Bootsnipp Profile</a><br />
-                    <a href="">Bootply Profile</a>
-                    <p>SKILLS</p>
-                    <a href="">Web Designer</a><br />
-                    <a href="">Web Developer</a><br />
-                    <a href="">WordPress</a><br />
-                    <a href="">WooCommerce</a><br />
-                    <a href="">PHP, .Net</a><br />
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="tab-content profile-tab" id="myTabContent">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>用户名</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{user.username}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>姓名</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{profile.name}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Email</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{user.email}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>电话号码</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{user.phone_number}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>性别</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{user.sex}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>兴趣</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{profile.interesting}}</p>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>QQ</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{profile.QQ}}</p>
-                            </div>
+
+        <div class="col-md-6">
+            <div class="profile-head">
+
+                <h1>
+                    {{user.username}}
+                </h1>
+                <h4>
+                    {{profile.job}}
+                </h4>
+                <h5>
+                    {{profile.biography}}
+                </h5>
+                <br>
+
+                <!--<p class="proile-rating">RANKINGS : <span>8/10</span></p>-->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">个人信息</a>
+                    </li>
+                    <!--
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                            aria-controls="profile" aria-selected="false">Timeline</a>
+                    </li>
+                    -->
+                </ul>
+
+            </div>
+        </div>
+        {% if user.id == request.session.user_id %}
+        <div class="col-md-2">
+            <a class="profile-edit-btn" name="btnAddMore"
+                href="{% url 'profile_edit' id=request.session.user_id %}">Edit Profile</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="profile-work">
+                <br>
+                <div class="d-flex justify-content-around mb-3">
+                    {% csrf_token %}
+                    {% if user.id != request.session.user_id %}
+
+                    <button type="button" class="btn btn-success btn-sm unfollow-btn"
+                        data-href="{% url 'actstream_unfollow' content_type_id=ContentTypeId object_id=user.id  %}"
+                        style="{% ifnotequal is_following_bit True %} display:none {% endifnotequal %}">
+                        unfollow
+                    </button>
+
+                    <button type="button"
+                        data-href="{% url 'actstream_follow' content_type_id=ContentTypeId object_id=user.id  %}"
+                        class="btn btn-primary btn-sm follow-btn"
+                        style="{% ifequal is_following_bit True %} display:none {% endifequal %}">
+                        Follow
+                    </button>
+
+                    {% endif %}
+                    <!--
+                                <button type="button" class="btn btn-success btn-sm">Follow</button>
+                             <button type="button" class="btn btn-danger btn-sm">Add</button> -->
+                </div>
+
+                <!--<p>WORK LINK</p>-->
+                <hr class=dotline size=1>
+                <a id="" href="#home">微博</a><br />
+                <hr class=dotline size=1>
+                <a href="#profile">收藏</h><br />
+                    <hr class=dotline size=1>
+                    <a href="">评论</a><br />
+                    <hr class=dotline size=1>
+                    <a href="">转发</a><br />
+                    <hr class=dotline size=1>
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="tab-content profile-tab" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>用户名</label>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>微信</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{profile.wechat}}</p>
-                            </div>
+                        <div class="col-md-6">
+                            <p>{{user.username}}</p>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>住址</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{profile.location}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>职业</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{profile.job}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                                <div class="col-md-6">
-                                    <label>个人简介</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>{{profile.bio}}</p>
-                                </div>
-                            </div>
                     </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Experience</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>Expert</p>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>姓名</label>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Hourly Rate</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>10$/hr</p>
-                            </div>
+                        <div class="col-md-6">
+                            <p>{{profile.name}}</p>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Total Projects</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>230</p>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Email</label>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>English Level</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>Expert</p>
-                            </div>
+                        <div class="col-md-6">
+                            <p>{{user.email}}</p>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Availability</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>6 months</p>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>电话号码</label>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label>Your Bio</label><br />
-                                <p>Your detail description</p>
-                            </div>
+                        <div class="col-md-6">
+                            <p>{{user.phone_number}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>性别</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{user.sex}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>兴趣</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile.interesting}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>QQ</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile.QQ}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>微信</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile.wechat}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>住址</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile.location}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>职业</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile.job}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>个人简介</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{profile.bio}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Experience</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Expert</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Hourly Rate</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>10$/hr</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Total Projects</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>230</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>English Level</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Expert</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Availability</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>6 months</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Your Bio</label><br />
+                            <p>Your detail description</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Experience</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Expert</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Hourly Rate</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>10$/hr</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Total Projects</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>230</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>English Level</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Expert</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Availability</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>6 months</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Your Bio</label><br />
+                            <p>Your detail description</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+
 </div>
 
 <script type="text/javascript">
+    /*
+$(document).ready(
+    alert("{{is_following_bit}}");
+    if("{{is_following_bit}}"){
+        $(".unfollow-btn").show();
+        $(".unfollow-btn").attr('disabled',false);
+        $(".follow-btn").hide();
+        $(".follow-btn").attr('disabled',True);
+    }
+    else{
+        $(".follow-btn").hide();
+        $(".follow-btn").attr('disabled',True);
+    }
 
+);
+*/
+    $(document).on('click', '.follow-btn', function () {
+        follow(this);
+    });
+    $(document).on('click', '.unfollow-btn', function () {
+        unfollow(this);
+    });
+
+    function follow(e) {
+        //var $el = $(e.target); //get element
+
+
+        $.ajax({
+            type: 'GET',
+            url: $(e).attr('data-href'),
+            beforeSend: function () {
+                $(e).attr('disabled', true);
+            },
+            success: function (data) {
+                $(e).hide();
+                $(e).attr('disabled', false);
+                //$el.prev().show();
+                // $el.hide();
+                //update_followers_count(id);
+
+                $(".unfollow-btn").show();
+                $(".unfollow-btn").attr('disabled', false);
+
+            }
+        });
+    }
+
+    function unfollow(e) {
+        //var $el = $(e.target);
+        $.ajax({
+            type: 'GET',
+            url: $(e).attr('data-href'),
+            beforeSend: function () {
+                $(e).attr('disabled', true);
+            },
+            success: function (data) {
+                $(e).hide();
+                $(e).attr('disabled', false);
+                //$el.next().show();
+                //$el.hide();
+                //update_followers_count(id);
+                // console.log(data);
+                $(".follow-btn").show();
+                $(".follow-btn").attr('disabled', false);
+
+            }
+        });
+    }
+
+    $('.profile-popover').hover(show_profile_popover.bind(this), hide_profile_popover.bind(this));
+
+    function show_profile_popover(e) {
+        var $el = $(e.target);
+
+        hover_timer = setTimeout(function () {
+            hover_timer = null;
+            $.ajax({
+                type: 'GET',
+                url: $el.data('href'),
+                success: function (data) {
+                    $el.popover({
+                        html: true,
+                        content: data,
+                        trigger: 'manual',
+                        animation: false
+                    });
+                    $el.popover('show');
+                    $('.popover').on('mouseleave', function () {
+                        setTimeout(function () {
+                            $el.popover('hide');
+                        }, 200);
+                    });
+                }
+            });
+        }, 500);
+    }
+
+
+    function hide_profile_popover(e) {
+        var $el = $(e.target);
+
+        if (hover_timer) {
+            clearTimeout(hover_timer);
+            hover_timer = null;
+        } else {
+            setTimeout(function () {
+                if (!$('.popover:hover').length) {
+                    $el.popover('hide');
+                }
+            }, 200);
+        }
+    }
+
+    function update_followers_count(id) {
+        var $el = $('#followers-count-' + id);
+        $.ajax({
+            type: 'GET',
+            url: $el.data('href'),
+            success: function (data) {
+                $el.text(data.count);
+            }
+        });
+    }
 </script>
 
 {% endblock %}

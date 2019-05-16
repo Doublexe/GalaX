@@ -38,6 +38,6 @@ urlpatterns = [
     url(r'^captcha', include('captcha.urls')),
     
     
-    url(r'^friendship/', include('friendship.urls')),
+    url(r'^activity/', include('actstream.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

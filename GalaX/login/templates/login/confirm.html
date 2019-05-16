@@ -4,8 +4,9 @@
 {% block content %}
 <body style="background-image: url({% static 'image/galax6.jpg' %});background-size:100%;">
     <div class="row">
-        <center></center><h1 class="text-center" style="color:floralwhite">{{ message }}</h1> 
-        <br>如果长时间没有跳转，可以点此跳转</a></center>
+        <center><h1 class="text-center" style="color:floralwhite">{{ message }}</h1> </center>
+        <br>
+        <center><h1 href="/login/" h1 class="text-center" style="color:floralwhite">如果长时间没有跳转，可以点此跳转</h1></center>
     </div>
     <script>
         window.setTimeout("window.location='/login/'",4000);
