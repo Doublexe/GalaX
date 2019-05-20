@@ -20,8 +20,8 @@
     }
 
     .profile-img img {
-        width: 70%;
-        height: 100%;
+        width: 55%;
+        height: 85%;
     }
 
     .profile-img .file {
@@ -127,6 +127,11 @@
         BORDER-RIGHT-STYLE: dotted;
         BORDER-TOP-STYLE: dotted
     }
+
+    .small-avatar-img img {
+        width: 25%;
+        height: 55%;
+    }
 </style>
 
 {% endblock %}
@@ -159,21 +164,10 @@
                 <h5>
                     {{profile.biography}}
                 </h5>
-                <br>
+
 
                 <!--<p class="proile-rating">RANKINGS : <span>8/10</span></p>-->
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                            aria-controls="home" aria-selected="true">个人信息</a>
-                    </li>
-                    <!--
-                    <li class="nav-item">
-                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                            aria-controls="profile" aria-selected="false">Timeline</a>
-                    </li>
-                    -->
-                </ul>
+
 
             </div>
         </div>
@@ -189,6 +183,13 @@
         <div class="col-md-4">
             <div class="profile-work">
                 <br>
+                <div class="d-flex justify-content-around mb-3">
+                    
+                    <h8 class="nav-link active" id="followers_number">关注者：{{total_followers}}</h8>
+                    <h8 class="nav-link active" id="followings_number">关注的人：{{total_following}}</h8>
+                    
+
+                </div>
                 <div class="d-flex justify-content-around mb-3">
                     {% csrf_token %}
                     {% if user.id != request.session.user_id %}
@@ -212,237 +213,584 @@
                              <button type="button" class="btn btn-danger btn-sm">Add</button> -->
                 </div>
 
-                <!--<p>WORK LINK</p>-->
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+                        aria-controls="v-pills-home" aria-selected="true">个人信息</a>
+                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
+                        aria-controls="v-pills-profile" aria-selected="false">微博</a>
+                    <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
+                        aria-controls="v-pills-messages" aria-selected="false">收藏</a>
+                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab"
+                        aria-controls="v-pills-settings" aria-selected="false">转发</a>
+                </div>
+
+
+                <!--<p>WORK LINK</p>
                 <hr class=dotline size=1>
-                <a id="" href="#home">微博</a><br />
+                <a  >微博</a><br />
                 <hr class=dotline size=1>
                 <a href="#profile">收藏</h><br />
                     <hr class=dotline size=1>
-                    <a href="">评论</a><br />
-                    <hr class=dotline size=1>
                     <a href="">转发</a><br />
                     <hr class=dotline size=1>
-
+                    <a href="#home">个人信息</a><br />
+                    <hr class=dotline size=1>
+-->
             </div>
         </div>
+        <!--侧边点击后出现的内容块-->
         <div class="col-md-8">
-            <div class="tab-content profile-tab" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>用户名</label>
+
+            <!--侧边栏的tablist切换-->
+            <div class="tab-content" id="v-pills-tabContent">
+                <!--侧边点击后出现的内容-->
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                    aria-labelledby="v-pills-home-tab">
+
+                    <!--内容块上的切换选择条-->
+                    <ul class="nav nav-tabs" id="homeTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                aria-controls="home" aria-selected="true">资料</a>
+                        </li>
+                        <!--
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                                    aria-controls="profile" aria-selected="false">Timeline</a>
+                            </li>
+                            -->
+                    </ul>
+                    <br>
+
+                    <!--内容块上的切换的实际内容-->
+                    <div class="tab-content profile-tab" id="myTabContentHome">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>用户名</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{user.username}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>姓名</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{profile.name}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Email</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{user.email}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>电话号码</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{user.phone_number}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>性别</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{user.sex}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>兴趣</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{profile.interesting}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>QQ</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{profile.QQ}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>微信</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{profile.wechat}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>住址</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{profile.location}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>职业</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{profile.job}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>个人简介</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{profile.bio}}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <p>{{user.username}}</p>
+
+
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Experience</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>Expert</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Hourly Rate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>10$/hr</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Total Projects</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>230</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>English Level</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>Expert</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Availability</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>6 months</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Your Bio</label><br />
+                                    <p>Your detail description</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>姓名</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{profile.name}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Email</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{user.email}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>电话号码</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{user.phone_number}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>性别</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{user.sex}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>兴趣</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{profile.interesting}}</p>
+
+
+
+
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Experience</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>Expert</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Hourly Rate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>10$/hr</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Total Projects</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>230</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>English Level</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>Expert</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Availability</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>6 months</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Your Bio</label><br />
+                                    <p>Your detail description</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>QQ</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{profile.QQ}}</p>
+                </div>
+
+                <!--侧边点击后出现的内容-->
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <!--内容块上的切换选择条-->
+                    <ul class="nav nav-tabs" id="eventTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="event-tab" data-toggle="tab" href="#event_list" role="tab"
+                                aria-controls="event" aria-selected="true">所发微博</a>
+                        </li>
+                    </ul>
+                    <br>
+                    <!--内容块上的切换的实际内容-->
+                    <div class="tab-content profile-tab" id="myTabContentEvent">
+                        <div class="tab-pane fade show active" id="event_list" role="tabpanel"
+                            aria-labelledby="event-tab">
+                            <!--weibo start-->
+                            <div class="row mt-2">
+                                {% for information in weibo_list %}
+                                <!-- 文章内容 -->
+                                <div class="col-4 mb-4">
+                                    <!-- 卡片容器 -->
+                                    <div class="card h-100">
+                                        <!-- 标题 -->
+                                        <h6 class="card-header">
+                                            <div class='row'>
+                                                <div class='col-md-6'>
+
+                                                    {% if profile.avatar %}
+                                                    <img src="{{ profile.avatar.url }}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% else %}
+                                                    <img src="{% static 'image/avatar_2x.png' %}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% endif %}
+
+                                                </div>
+                                                <div class='col-md-6'>
+                                                    <div class='row'>
+                                                        {{user.username}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.job}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.biography|slice:'4'}}...
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </h6>
+                                        <h5 class="card-header">
+                                            {{ information.summary|slice:'7' }}</h5>
+                                        <!-- 摘要 -->
+                                        <div class="card-body">
+                                            <p class="card-text">{{ information.content|slice:'100' }}...</p>
+                                        </div>
+                                        <!-- 注脚 -->
+                                        <div class="card-footer">
+                                            <a href="#" class="btn btn-primary">阅读详情</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!--weibo end-->
+                            <!--分页器开始-->
+                            <div class="pagination row">
+                                <div class="m-auto">
+                                    <span class="step-links">
+                                        <!-- 如果不是第一页，则显示上翻按钮 -->
+                                        {% if weibo_list.has_previous %}
+                                        <a onclick="PclickFunction()" class="btn btn-success">
+                                            &laquo; 1
+                                        </a>
+                                        <span>...</span>
+                                        <a href="?page_weibo={{ weibo_list.previous_page_number }}#v-pills-profile"
+                                            class="btn btn-secondary">
+                                            {{ weibo_list.previous_page_number }}
+                                        </a>
+                                        {% endif %}
+
+                                        <!-- 当前页面 -->
+                                        <span class="current btn btn-danger btn-lg">
+                                            {{ weibo_list.number }}
+                                        </span>
+
+                                        <!-- 如果不是最末页，则显示下翻按钮 -->
+                                        {% if weibo_list.has_next %}
+                                        <a href="?page_weibo={{ weibo_list.next_page_number }}#v-pills-profile"
+                                            class="btn btn-secondary">
+                                            {{ weibo_list.next_page_number }}
+                                        </a>
+                                        <span>...</span>
+                                        <a href="?page_weibo={{ weibo_list.paginator.num_pages }}#v-pills-profile"
+                                            class="btn btn-success">
+                                            {{ weibo_list.paginator.num_pages }} &raquo;
+                                        </a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            <!--分页器结束-->
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>微信</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{profile.wechat}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>住址</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{profile.location}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>职业</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{profile.job}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>个人简介</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>{{profile.bio}}</p>
+
+                </div>
+
+                <!--侧边点击后出现的内容-->
+                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                    <!--内容块上的切换选择条-->
+                    <ul class="nav nav-tabs" id="LikeTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="Like-tab" data-toggle="tab" href="#Like_list" role="tab"
+                                aria-controls="Like" aria-selected="true">收藏条目</a>
+                        </li>
+                    </ul>
+                    <br>
+                    <!--内容块上的切换的实际内容-->
+                    <div class="tab-content profile-tab" id="myTabContentLike">
+                        <div class="tab-pane fade show active" id="Like_list" role="tabpanel"
+                            aria-labelledby="Like-tab">
+
+
+                            <!--Like start-->
+                            <div class="row mt-2">
+                                {% for information in Like_list %}
+                                <!-- 文章内容 -->
+                                <div class="col-4 mb-4">
+                                    <!-- 卡片容器 -->
+                                    <div class="card h-100">
+                                        <!-- 标题 -->
+                                        <h6 class="card-header">
+                                            <div class='row'>
+                                                <div class='col-md-6'>
+
+                                                    {% if profile.avatar %}
+                                                    <img src="{{ profile.avatar.url }}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% else %}
+                                                    <img src="{% static 'image/avatar_2x.png' %}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% endif %}
+
+                                                </div>
+                                                <div class='col-md-6'>
+                                                    <div class='row'>
+                                                        {{user.username}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.job}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.biography|slice:'4'}}...
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </h6>
+                                        <h5 class="card-header">
+                                            {{ information.event.summary|slice:'7' }}</h5>
+                                        <!-- 摘要 -->
+                                        <div class="card-body">
+                                            <p class="card-text">{{ information.event.content|slice:'100' }}...</p>
+                                        </div>
+                                        <!-- 注脚 -->
+                                        <div class="card-footer">
+                                            <a href="#" class="btn btn-primary">阅读详情</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!--Like end-->
+                            <!--分页器开始-->
+                            <div class="pagination row">
+                                <div class="m-auto">
+                                    <span class="step-links">
+                                        <!-- 如果不是第一页，则显示上翻按钮 -->
+                                        {% if Like_list.has_previous %}
+                                        <a href="?page_Like=1#v-pills-messages" class="btn btn-success">
+                                            &laquo; 1
+                                        </a>
+                                        <span>...</span>
+                                        <a href="?page_Like={{ Like_list.previous_page_number }}#v-pills-messages"
+                                            class="btn btn-secondary">
+                                            {{ Like_list.previous_page_number }}
+                                        </a>
+                                        {% endif %}
+
+                                        <!-- 当前页面 -->
+                                        <span class="current btn btn-danger btn-lg">
+                                            {{ Like_list.number }}
+                                        </span>
+
+                                        <!-- 如果不是最末页，则显示下翻按钮 -->
+                                        {% if Like_list.has_next %}
+                                        <a href="?page_Like={{ Like_list.next_page_number }}#v-pills-messages" class="btn btn-secondary">
+                                            {{ Like_list.next_page_number }}
+                                        </a>
+                                        <span>...</span>
+                                        <a href="?page_Like={{ Like_list.paginator.num_pages }}#v-pills-messages"
+                                            class="btn btn-success">
+                                            {{ Like_list.paginator.num_pages }} &raquo;
+                                        </a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            <!--分页器结束-->
+
+
+
                         </div>
                     </div>
                 </div>
+                <!--侧边点击后出现的内容-->
+                <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                    <!--内容块上的切换选择条-->
+                    <ul class="nav nav-tabs" id="repostTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="repost-tab" data-toggle="tab" href="#repost_list" role="tab"
+                                aria-controls="repost" aria-selected="true">转发条目</a>
+                        </li>
+                    </ul>
+                    <br>
+                    <!--内容块上的切换的实际内容-->
+                    <div class="tab-content profile-tab" id="myTabContentRepost">
+                        <div class="tab-pane fade show active" id="repost_list" role="tabpanel"
+                            aria-labelledby="repost-tab">
 
-                
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Experience</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>Expert</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Hourly Rate</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>10$/hr</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Total Projects</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>230</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>English Level</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>Expert</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Availability</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>6 months</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Your Bio</label><br />
-                            <p>Your detail description</p>
-                        </div>
-                    </div>
-                </div>
+                            <!--repost start-->
+                            <div class="row mt-2">
+                                {% for information in repost_list %}
+                                <!-- 文章内容 -->
+                                <div class="col-4 mb-4">
+                                    <!-- 卡片容器 -->
+                                    <div class="card h-100">
+                                        <!-- 标题 -->
+                                        <h6 class="card-header">
+                                            <div class='row'>
+                                                <div class='col-md-6'>
 
+                                                    {% if profile.avatar %}
+                                                    <img src="{{ profile.avatar.url }}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% else %}
+                                                    <img src="{% static 'image/avatar_2x.png' %}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% endif %}
 
+                                                </div>
+                                                <div class='col-md-6'>
+                                                    <div class='row'>
+                                                        {{user.username}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.job}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.biography|slice:'4'}}...
+                                                    </div>
+                                                </div>
+                                            </div>
 
+                                        </h6>
+                                        <h5 class="card-header">
+                                            {{ information.summary|slice:'7' }}</h5>
+                                        <!-- 摘要 -->
+                                        <div class="card-body">
+                                            <p class="card-text">{{ information.content|slice:'100' }}...</p>
+                                        </div>
+                                        <!-- 注脚 -->
+                                        <div class="card-footer">
+                                            <a href="#" class="btn btn-primary">阅读详情</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!--repost end-->
+                            <!--分页器开始-->
+                            <div class="pagination row">
+                                <div class="m-auto">
+                                    <span class="step-links">
+                                        <!-- 如果不是第一页，则显示上翻按钮 -->
+                                        {% if repost_list.has_previous %}
+                                        <a href="?page_repost=1" class="btn btn-success">
+                                            &laquo; 1
+                                        </a>
+                                        <span>...</span>
+                                        <a href="?page_repost={{ repost_list.previous_page_number }}"
+                                            class="btn btn-secondary">
+                                            {{ repost_list.previous_page_number }}
+                                        </a>
+                                        {% endif %}
 
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Experience</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>Expert</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Hourly Rate</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>10$/hr</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Total Projects</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>230</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>English Level</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>Expert</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Availability</label>
-                        </div>
-                        <div class="col-md-6">
-                            <p>6 months</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Your Bio</label><br />
-                            <p>Your detail description</p>
+                                        <!-- 当前页面 -->
+                                        <span class="current btn btn-danger btn-lg">
+                                            {{ repost_list.number }}
+                                        </span>
+
+                                        <!-- 如果不是最末页，则显示下翻按钮 -->
+                                        {% if repost_list.has_next %}
+                                        <a href="?page_repost={{ repost_list.next_page_number }}"
+                                            class="btn btn-secondary">
+                                            {{ repost_list.next_page_number }}
+                                        </a>
+                                        <span>...</span>
+                                        <a href="?page_repost={{ repost_list.paginator.num_pages }}"
+                                            class="btn btn-success">
+                                            {{ repost_list.paginator.num_pages }} &raquo;
+                                        </a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            <!--分页器结束-->
+
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
 </div>
 
 <script type="text/javascript">
-    /*
-$(document).ready(
-    alert("{{is_following_bit}}");
-    if("{{is_following_bit}}"){
-        $(".unfollow-btn").show();
-        $(".unfollow-btn").attr('disabled',false);
-        $(".follow-btn").hide();
-        $(".follow-btn").attr('disabled',True);
-    }
-    else{
-        $(".follow-btn").hide();
-        $(".follow-btn").attr('disabled',True);
-    }
 
-);
-*/
+    var followers={{total_followers}};
     $(document).on('click', '.follow-btn', function () {
         follow(this);
     });
@@ -452,8 +800,6 @@ $(document).ready(
 
     function follow(e) {
         //var $el = $(e.target); //get element
-
-
         $.ajax({
             type: 'GET',
             url: $(e).attr('data-href'),
@@ -466,7 +812,12 @@ $(document).ready(
                 //$el.prev().show();
                 // $el.hide();
                 //update_followers_count(id);
-
+                
+                followers+=1;
+                followers='关注者：'+followers;
+                $("#followers_number").text(followers);
+                
+                
                 $(".unfollow-btn").show();
                 $(".unfollow-btn").attr('disabled', false);
 
@@ -489,6 +840,9 @@ $(document).ready(
                 //$el.hide();
                 //update_followers_count(id);
                 // console.log(data);
+                followers=isNaN(followers-1)?0:(followers-1);
+                followings='关注者：'+followers;
+                $("#followers_number").text(followings);
                 $(".follow-btn").show();
                 $(".follow-btn").attr('disabled', false);
 
@@ -496,60 +850,39 @@ $(document).ready(
         });
     }
 
-    $('.profile-popover').hover(show_profile_popover.bind(this), hide_profile_popover.bind(this));
-
-    function show_profile_popover(e) {
-        var $el = $(e.target);
-
-        hover_timer = setTimeout(function () {
-            hover_timer = null;
-            $.ajax({
-                type: 'GET',
-                url: $el.data('href'),
-                success: function (data) {
-                    $el.popover({
-                        html: true,
-                        content: data,
-                        trigger: 'manual',
-                        animation: false
-                    });
-                    $el.popover('show');
-                    $('.popover').on('mouseleave', function () {
-                        setTimeout(function () {
-                            $el.popover('hide');
-                        }, 200);
-                    });
-                }
-            });
-        }, 500);
-    }
-
-
-    function hide_profile_popover(e) {
-        var $el = $(e.target);
-
-        if (hover_timer) {
-            clearTimeout(hover_timer);
-            hover_timer = null;
-        } else {
-            setTimeout(function () {
-                if (!$('.popover:hover').length) {
-                    $el.popover('hide');
-                }
-            }, 200);
-        }
-    }
-
-    function update_followers_count(id) {
-        var $el = $('#followers-count-' + id);
-        $.ajax({
+/*
+function PclickFunction(e)
+{
+    $.ajax({
             type: 'GET',
-            url: $el.data('href'),
+            url: $(e).attr('data-href'),
+            beforeSend: function () {
+                $(e).attr('disabled', true);
+            },
             success: function (data) {
-                $el.text(data.count);
+                $(e).attr('disabled', false);
+                
+
             }
         });
-    }
+}
+*/
+    /*
+    $('#v-pills-profile-tab').on('click', function (e) {
+        
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'event_view' id=user.id option='weibo'%}",
+            success: function (data) {
+                alert(data)
+                //$el.next().show();
+                //$el.hide();
+                //update_followers_count(id);
+                // console.log(data);
+            }
+        });
+});
+*/
 </script>
 
 {% endblock %}

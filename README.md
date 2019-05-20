@@ -133,3 +133,48 @@ def profile_edit(request,id):
 1. 个人信息界面基本完成，差交互内容。
 2. 朋友关系完成。
 
+
+5.19
+1. 更改了map的event模型，原模型如下：
+
+```
+class Event(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+
+    # Content
+    image = models.ImageField(upload_to = "event_image/%Y%m%d/")
+    summary = models.CharField(max_length=50)
+    content = models.CharField(max_length=2000)
+
+    # GEO
+    # CAUTION: db_index is required, or the saving fail!
+    c_time = models.DateTimeField(auto_now_add=True)
+    lng = models.DecimalField(db_index=True, max_digits=9, decimal_places=6)
+    lat = models.DecimalField(db_index=True, max_digits=9, decimal_places=6)
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    # If Repost
+    # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.Field.null
+    repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True)
+    repostcomment = models.CharField(max_length=2000)
+     
+
+    def __str__(self):
+        return self.name + '_to_' + str(self.repost)
+
+    class Meta:
+        ordering = ["-c_time"]
+        verbose_name = "事件"
+        verbose_name_plural = "事件"
+```
+ 唐，请确认以下字段：
+ - repost是否能为空，默认是什么
+ - image能否为空
+ - 所有外键字段是否能为空，默认是什么
+
+2. 添加了后台注册。
+3. 完成了个人信息界面对数据的抓取。
+4. 完成了搜索框。
+5. 定制化后台管理界面。

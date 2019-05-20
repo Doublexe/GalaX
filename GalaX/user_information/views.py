@@ -14,6 +14,9 @@ from django.shortcuts import render_to_response, render,redirect
 from actstream.actions import follow, unfollow,is_following
 from django.contrib.contenttypes.models import ContentType
 from actstream.models import following, followers
+from map.models import Event,Like,Comment
+from django.core.paginator import Paginator
+
 
 def index(request):
     print("to index")
@@ -80,6 +83,7 @@ def profile_edit(request,id):
             return render(request, 'UserInformation/profile_edit.html', context)
     else:
         return redirect("/index/")
+
 @csrf_exempt
 def profile_view(request,id):# 这里的request保存的是session中的这个登陆者的信息，id是想要访问的谁的id
     if request.session.get('is_login', None):#查看是否已经登陆
@@ -97,12 +101,78 @@ def profile_view(request,id):# 这里的request保存的是session中的这个�
         print(is_following_bit)
         ContentTypeId=ContentType.objects.get(app_label='login', model='user').id
         followers_list=followers(user) # returns a list of Users who follow id
+        total_followers=len(followers_list)
         following_list=following(user) # returns a list of actors who request.user is following
-        # context = {'profile_form': profile_form, 'profile': profile, 'user': user,'is_following_bit':is_following_bit ,'ContentTypeId':ContentTypeId }
-        return render(request, 'UserInformation/profile_view.html', locals())
-        #else:
-            #return render(request, 'UserInformation/profile_view.html', context)
+        total_following=len(following_list)
+        
+        weibo_list=Event.objects.filter(owner=user).values('summary','content')
+        
+        Like_object=Like.objects.filter(user=user)
+        Like_list=Like_object
+        repost_list=Event.objects.filter(owner=user,repost=True).values('summary','content','repostcomment')
+        
+        # 每页显示 6 个event
+        pages = Paginator(weibo_list, 3)
+        # 获取 url 中的页码
+        current_page = request.GET.get('page_weibo',1)
+        # 将导航对象相应的页码内容返回给 articles
+        weibo_list = pages.page(current_page)
+        
+        # 每页显示 6 个event
+        pages = Paginator(Like_list, 3)
+        # 获取 url 中的页码
+        current_page = request.GET.get('page_Like',1)
+        # 将导航对象相应的页码内容返回给 articles
+        Like_list = pages.page(current_page)
+        
+        # 每页显示 6 个event
+        pages = Paginator(repost_list, 3)
+        # 获取 url 中的页码
+        current_page = request.GET.get('page_repost',1)
+        # 将导航对象相应的页码内容返回给 articles
+        repost_list = pages.page(current_page)
+        if request.GET.get('page_weibo',0) or request.GET.get('page_Like',0) or request.GET.get('page_repost',0):
+            print("respond !!!!!!!!!!!!!!")
+            return render_to_response('UserInformation/profile_view.html', locals())
+        else:
+            return render(request, 'UserInformation/profile_view.html', locals())
     
     else:
         return redirect("/login/")
+
+@login_required
+def event_view(request,id):
+    #if request.method == 'G':
+    user_actions = User.objects.get(id=request.session['user_id'])# 登陆者
+    user = User.objects.get(id=id)# 查看的人
+    # user_id 是 OneToOneField 自动生成的字段
+    profile = Profile.objects.get(user_id=id)
+    
+    weibo_list=Event.objects.filter(owner=user).values('summary','content')
+    Like_object=Like.objects.filter(user=user)
+    Like_list=Like_object
+    repost_list=Event.objects.filter(owner=user,repost=True).values('summary','content','repostcomment')
+
+    # 每页显示 6 个event
+    pages = Paginator(weibo_list, 3)
+    # 获取 url 中的页码
+    current_page = request.GET.get('page_weibo',1)
+    # 将导航对象相应的页码内容返回给 articles
+    weibo_list = pages.page(current_page)
+
+    # 每页显示 6 个event
+    pages = Paginator(Like_list, 3)
+    # 获取 url 中的页码
+    current_page = request.GET.get('page_Like',1)
+    # 将导航对象相应的页码内容返回给 articles
+    Like_list = pages.page(current_page)
+
+    # 每页显示 6 个event
+    pages = Paginator(repost_list, 3)
+    # 获取 url 中的页码
+    current_page = request.GET.get('page_repost',1)
+    # 将导航对象相应的页码内容返回给 articles
+    repost_list = pages.page(current_page)
+    return render_to_response('UserInformation/profile_view.html',locals())
+
 

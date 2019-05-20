@@ -10,7 +10,7 @@ class Event(models.Model):
     name = models.CharField(max_length=50)
 
     # Content
-    image = models.ImageField(upload_to = "event_image/%Y%m%d/")
+    image = models.ImageField(upload_to = "event_image/%Y%m%d/",blank=True)
     summary = models.CharField(max_length=50)
     content = models.CharField(max_length=2000)
 
@@ -24,8 +24,8 @@ class Event(models.Model):
 
     # If Repost
     # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.Field.null
-    repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True)
-    repostcomment = models.CharField(max_length=2000)
+    repost = models.ForeignKey("Event", on_delete=models.DO_NOTHING, null=True, default=None,blank=True)
+    repostcomment = models.CharField(max_length=2000,blank=True)
      
 
     def __str__(self):

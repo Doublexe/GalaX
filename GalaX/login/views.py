@@ -13,6 +13,46 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_django
 from django.contrib.auth import logout as  logout_django
+from django.core.paginator import Paginator
+from map.models import Event
+from django.db.models import Q
+
+def getPages(request, objectlist):
+    """get the paginator"""
+    currentPage = request.GET.get('page', 1)
+    
+    paginator = Paginator(objectlist, 6)
+    objectlist = paginator.page(currentPage)
+ 
+    return paginator, objectlist
+
+
+
+def search(request):
+    search = request.GET.get('search')
+    
+    # 用户搜索逻辑
+    if search:
+        event_list = Event.objects.filter(
+                Q(name__icontains=search) |
+                Q(summary__icontains=search) |
+                Q(content__icontains=search)
+            )
+    else:
+        # 将 search 参数重置为空
+        search = ''
+        event_list = Event.objects.all()
+    print(event_list)
+    paginator = Paginator(event_list, 3)
+    current_page = request.GET.get('page',1)
+    event_list = paginator.page(current_page)
+    print("to p:",event_list)
+    # 增加 search 到 context
+    context = { 'event_list': event_list, 'search': search }
+
+    return render(request, 'login/search.html', context)
+
+
 def hash_code(s, salt='mysite'):# 加点盐
     h = hashlib.sha256()
     s += salt
@@ -62,13 +102,13 @@ def send_email(email, code,function_code):
 
 def index(request):
     pass
-    return render(request, 'login/index.html')
+    return redirect("/board/")
 
 
 def login(request):
     if request.session.get('is_login', None):
         #如果已经登陆
-        return redirect("/index/")
+        return redirect("/board/")
     if request.method == "POST":
         login_form = forms.UserForm(request.POST)
         message = "请检查填写的内容！"
@@ -99,7 +139,7 @@ def login(request):
 def register(request):
     if request.session.get('is_login', None):
         # 登录状态不允许注册！
-        return redirect("/index/")
+        return redirect("/board/")
     if request.method == "POST":
         register_form = forms.RegisterForm(request.POST)
         message = "请检查填写的内容！"
@@ -149,14 +189,14 @@ def register(request):
 def logout(request):
     if not request.session.get('is_login', None):
         # 如果本来就未登录，也就没有登出一说
-        return redirect("/index/")
+        return redirect("/board/")
     request.session.flush()
     logout_django(request)
     # 或者使用下面的方法
     # del request.session['is_login']
     # del request.session['user_id']
     # del request.session['user_name']
-    return redirect("/index/")
+    return redirect("/board/")
 
 def passchg(request):
     if request.session.get('is_login', None):

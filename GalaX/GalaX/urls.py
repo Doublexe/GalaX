@@ -39,5 +39,6 @@ urlpatterns = [
     
     
     url(r'^activity/', include('actstream.urls')),
+    url(r'^search$',views.search,name='search'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

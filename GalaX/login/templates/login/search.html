@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+
+<style>
+    .errorlist {
+        color: red;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <!-- 修改，面包屑的href增加search参数 -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'search' %}?search={{ search }}">
+                    最新
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'search' %}?search={{ search }}">
+                    最热
+                </a>
+            </li>
+        </ol>
+    </nav>
+
+
+    <!-- 新增，搜索提示语 -->
+    {% if search %}
+    {% if event_list %}
+    <h4><span style="color: red">"{{ search }}"</span>的搜索结果如下：</h4>
+    <hr>
+    {% else %}
+    <h4>暂无<span style="color: red">"{{ search }}"</span>有关的文章。</h4>
+    <hr>
+    {% endif %}
+    {% endif %}
+                            <!--weibo start-->
+                            <div class="row mt-2">
+                                {% for information in event_list %}
+                                <!-- 文章内容 -->
+                                <div class="col-4 mb-4">
+                                    <!-- 卡片容器 -->
+                                    <div class="card h-100">
+                                        <!-- 标题 -->
+                                        <h6 class="card-header">
+                                            <div class='row'>
+                                                <!--难处理的头像签名名字等问题，先去掉-->
+                                                <!--
+                                                <div class='col-md-6'>
+
+                                                    {% if profile.avatar %}
+                                                    <img src="{{ profile.avatar.url }}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% else %}
+                                                    <img src="{% static 'image/avatar_2x.png' %}"
+                                                        class="avatar img-circle img-thumbnail" alt="avatar">
+                                                    {% endif %}
+
+                                                </div>
+                                                
+                                                <div class='col-md-6'>
+                                                    <div class='row'>
+                                                        {{information.owner.username}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.job}}
+                                                    </div>
+                                                    <div class='row'>
+                                                        {{profile.biography|slice:'4'}}...
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            -->
+                                        </h6>
+                                        <h5 class="card-header">
+                                            {{ information.summary|slice:'7' }}</h5>
+                                        <!-- 摘要 -->
+                                        <div class="card-body">
+                                            <p class="card-text">{{ information.content|slice:'100' }}...</p>
+                                        </div>
+                                        <!-- 注脚 -->
+                                        <div class="card-footer">
+                                            <a href="#" class="btn btn-primary">阅读详情</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!--weibo end-->
+    <!--分页器开始-->
+    <div class="pagination row">
+        <div class="m-auto">
+            <span class="step-links">
+                <!-- 如果不是第一页，则显示上翻按钮 -->
+                {% if event_list.has_previous %}
+                <a href="?page=1&search={{ search }}" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ event_list.previous_page_number }}&search={{ search }}"
+                class="btn btn-secondary">
+                    {{ event_list.previous_page_number }}
+                </a>
+                {% endif %}
+
+                <!-- 当前页面 -->
+                <span class="current btn btn-danger btn-lg">
+                    {{ event_list.number }}
+                </span>
+
+                <!-- 如果不是最末页，则显示下翻按钮 -->
+                {% if event_list.has_next %}
+                <a href="?page={{ event_list.next_page_number }}&search={{ search }}"
+                class="btn btn-secondary">
+                    {{ event_list.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ event_list.paginator.num_pages }}&search={{ search }}"
+                    class="btn btn-success">
+                    {{ event_list.paginator.num_pages }} &raquo;
+                </a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    <!--分页器结束-->
+
+
+                    {% endblock %}

@@ -8,4 +8,6 @@ urlpatterns = [
     url('edit/(?P<id>[0-9]+)/', views.profile_edit, name='profile_edit'),
     # 用户信息查看
     url('view/(?P<id>[0-9]+)/', views.profile_view, name='profile_view'),
+    url('view/(?P<id>[0-9]+)/(?P<option>[\w]+)', views.event_view, name='event_view'),
+    
 ]
