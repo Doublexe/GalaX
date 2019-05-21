@@ -18,6 +18,11 @@ def index(request):
     return render(request, 'map/map_base.html')
 
 
+def to_event(request, id):
+    event = Event.objects.get(pk=id)
+    
+
+
 # On document ready, get the nearby events.
 #
 # Required:

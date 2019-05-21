@@ -6,6 +6,7 @@ from map.models import Like, Event, Comment
 from map.views import get_profilebase64, format_event
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse
+from actstream.models import following
 from django.shortcuts import render
 
 
@@ -14,6 +15,9 @@ from django.shortcuts import render
 
 def index(request):
     return render(request, 'board/board_base.html')
+
+def to_event(request):
+    return render(request, 'board/to_event.html')
 
 # login: 1; else: 0
 
@@ -187,9 +191,13 @@ def category(request):
     # depend on option, find corresponding events
     if option == "自己":
         events = Event.objects.filter(owner__id = user_id)
-        print(events)
-    # elif option == "朋友":
-    #     friends = User
+ 
+    elif option == "朋友":
+        friends =following(User.objects.get(pk=user_id))
+        events = []
+        for friend in friends:
+            events.append(Event.objects.filter(owner__id=friend.id))
+        
     # elif option == "热点":
     else: 
         raise ValueError("Option is invalid: "+option)

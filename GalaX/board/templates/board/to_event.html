@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+<!--baseline for board app-->
+
+{% load staticfiles %}
+
+{% block title %}
+广场 - GalaX
+{% endblock %}
+
+{% block css %}
+
+<meta charset="UTF-8">
+
+<!-- general css -->
+<link rel="stylesheet" type="text/css" href="{% static 'map/css/my_card.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'contextmenu\jquery.contextMenu.min.css' %}">
+
+<!-- Fontawesome -->
+<script defer src="{% static 'fontawesome-free-5.8.1-web/js/all.min.js' %}"></script>
+<!-- 使用buttons字体图标时才需要加载 Font-Awesome -->
+<link href="{% static 'fontawesome-free-5.8.1-web/css/all.min.css' %}" rel="stylesheet">
+
+
+<style>
+    body,
+    html {
+        height: 100%;
+    }
+</style>
+
+<!-- board_base.css -->
+<link rel="stylesheet" type="text/css" href="{% static 'board/css/board_base.css' %}">
+
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row grid">
+        {% include 'board/function_card.html' %}
+
+    </div>
+</div>
+
+<!-- Masonary and contextmenu -->
+<script type="module" src="{% static 'js/masonry.js'%}"></script>
+<script type="module" src="{% static 'contextmenu\jquery.contextMenu.min.js'%}"></script>
+
+<!-- board block dynamic -->
+<script type="module" src="{% static 'board/js/dynamics.js'%}"></script>
+<script type="module" src="{% static 'board/js/functions.js'%}"></script>
+<script type="module" src="{% static 'board/js/cards.js'%}"></script>
+<script type="module" src="{% static 'board/js/to_event_refresh.js'%}"></script>
+<script type="module" src="{% static 'board/js/render.js'%}"></script>
+{% endblock %}

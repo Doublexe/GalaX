@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^category$', views.category, name='category'),
     url(r'^comment$', views.comment, name='comment'),
     url(r'^is_login$', views.is_login, name='is_login'),
+    url(r'^to_event$', views.to_event, name='to_event'),
 ]
