@@ -109,7 +109,7 @@ def profile_view(request,id):# 这里的request保存的是session中的这个�
         
         Like_object=Like.objects.filter(user=user)
         Like_list=Like_object
-        repost_list=Event.objects.filter(owner=user,repost=True).values('summary','content','repostcomment')
+        repost_list=Event.objects.filter(owner=user,repost__isnull=False).values('summary','content','repostcomment')
         
         # 每页显示 6 个event
         pages = Paginator(weibo_list, 3)
